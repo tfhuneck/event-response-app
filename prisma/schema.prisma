@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_URL_DEV")
+  // directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Event {
+  id          String @unique @id @default(cuid())
+  name        String
+  date        DateTime
+  content     String
+  duration    Int
+  maxcount    Int
+  slots       Timeslot[]
+  alt         AltResponse?
+}
+
+model Timeslot {
+  id        String @unique @id @default(cuid())
+  name      String
+  time      DateTime 
+  eventID   String @unique
+  event     Event @relation(fields: [eventID], references: [id])
+  filled    Int
+  open      Boolean
+  response  Response[]
+}
+
+model Response {
+  id          String @unique @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String 
+  phone       Int?
+  time        String
+  timeslot    Timeslot @relation(fields: [time], references: [id])
+}
+
+model AltResponse {
+  id          String @unique @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String 
+  phone       Int?
+  comment     String?
+  eventID     String @unique
+  event       Event @relation(fields: [eventID], references: [id])
+}
