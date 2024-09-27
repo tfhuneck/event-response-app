@@ -14,6 +14,7 @@ model Event {
   date        DateTime
   content     String
   duration    Int
+  guestcount  Int
   maxcount    Int
   slots       Timeslot[]
   alt         AltResponse?
