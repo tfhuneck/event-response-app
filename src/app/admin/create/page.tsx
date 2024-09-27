@@ -8,8 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import * as LabelPrimitive from "@radix-ui/react-label"
+} from "@/components/ui/card"
 import { Slot } from "@radix-ui/react-slot"
 import {
   Form,
@@ -20,15 +19,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-  FormProvider,
-  useFormContext,
-} from "react-hook-form"
+
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Calendar as CalendarIcon } from "lucide-react"
 import {
   Popover,
@@ -58,40 +51,36 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { Textarea } from "@/components/ui/textarea"
 
+interface Inputs {
+  name: string
+  date: Date
+  description: string
+  duration: number
+  guestcount: number
+  maxcount: number
+  }
 
 const eventSchema = z.object({
   name: z.string(),
   date: z.date(),
-  content: z.string(),
-  duration: z.number().positive(),
-  guestcount: z.number().positive(),
-  maxcount: z.number().positive()
+  description: z.string(),
+  duration: z.coerce.number().positive(),
+  guestcount: z.coerce.number().positive(),
+  maxcount: z.coerce.number().positive()
 })
 
 const Create = () => {
 
-  const [practices, setPractices] = React.useState(1);
-  
-  const onSubmit = (data: z.infer<typeof eventSchema>) => console.log(data)
-  
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: {errors},
-  } = useForm<z.infer<typeof eventSchema>>({
-    resolver: zodResolver(eventSchema),
-    defaultValues:{
-      name: "",
-      content:"",
-    }
+  const [date, setDate] = React.useState<Date>() 
+  const form = useForm<z.infer<typeof eventSchema>>({
+    resolver: zodResolver(eventSchema)
   })
+  const {register, handleSubmit} = useForm<z.infer<typeof eventSchema>>()
 
-  const [date, setDate] = React.useState<Date>()
+  const onSubmit = (data : z.infer<typeof eventSchema> ) => alert(JSON.stringify(data));
 
   return (
     <>
@@ -114,31 +103,37 @@ const Create = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <Form {...register}>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <Form {...form}>
+              <form 
+              onSubmit={form.handleSubmit(onSubmit)} 
+              className="space-y-6">
                 <FormField
-                  control={control}
+                  control={form.control}
                   name="name"
                   render={({field}) => (
                     <FormItem>
                       <FormLabel>Event Name</FormLabel>
                       <FormControl>
-                        <Input type="text" placeholder="Event Name" {...field}/>
+                        <Input type="text" placeholder="Event Name" {...field} 
+                        // {...register('name')}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
-                  control={control}
+                  control={form.control}
                   name="date"
                   render={({field}) => (
-                    <FormItem className="flex flex-col ">
+                    <FormItem className="flex flex-col " >
                     <FormLabel>Event Date</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
+                            
+                            // {...register('date')}
                             variant={"outline"}
                             className={cn(
                               " pl-3 text-left font-normal",
@@ -168,38 +163,39 @@ const Create = () => {
                   )}
                 />
                 <FormField
-                  control={control}
-                  name="content"
+                  control={form.control}
+                  name="description"
                   render={({field}) => (
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Event Description" {...field}/>
+                        <Textarea placeholder="Event Description" {...field} 
+                        // {...register('description')}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
-                  control={control}
+                  control={form.control}
                   name="duration"
                   render={({field}) => (
                     <FormItem className="flex flex-col ">
                       <FormLabel>Event Slots duration</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}  
+                        // {...register('duration', {valueAsNumber: true})}
+                        >
                           <FormControl>
                             <SelectTrigger >
                               <SelectValue placeholder="Select Time Slot Length" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>Time Slot length</SelectLabel>
-                              <SelectItem value='15'>15 min</SelectItem>
-                              <SelectItem value='30'>30 min</SelectItem>
-                              <SelectItem value='45'>45 min</SelectItem>
-                              <SelectItem value='60'>60 min</SelectItem>
-                            </SelectGroup>
+                            <SelectItem value='15'>15 min</SelectItem>
+                            <SelectItem value='30'>30 min</SelectItem>
+                            <SelectItem value='45'>45 min</SelectItem>
+                            <SelectItem value='60'>60 min</SelectItem>
                           </SelectContent>
                         </Select>
                       <FormMessage />
@@ -207,26 +203,30 @@ const Create = () => {
                   )}
                 />
                 <FormField
-                  control={control}
+                  control={form.control}
                   name="maxcount"
                   render={({field}) => (
                     <FormItem>
                       <FormLabel>Maximum Guest Count per Timeslot</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="max guest count per slot" {...field}/>
+                        <Input type="number" placeholder="max guest count per slot" {...field} 
+                        // {...register('maxcount', {valueAsNumber: true})}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
-                  control={control}
+                  control={form.control}
                   name="guestcount"
                   render={({field}) => (
                     <FormItem>
                       <FormLabel>Maximum Guest Count per Invitation</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="max guest count per invitation" {...field}/>
+                        <Input type="number" placeholder="max guest count per invitation" {...field} 
+                        // {...register('guestcount', {valueAsNumber: true})}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
