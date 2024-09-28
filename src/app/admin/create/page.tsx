@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from "react";
+import axios from 'axios';
 import {
   Card,
   CardContent,
@@ -80,7 +81,17 @@ const Create = () => {
   })
   const {register, handleSubmit} = useForm<z.infer<typeof eventSchema>>()
 
-  const onSubmit = (data : z.infer<typeof eventSchema> ) => alert(JSON.stringify(data));
+  const onSubmit = (data : z.infer<typeof eventSchema> ) => {
+    console.log(data)
+    axios.post('api/create-event',{
+      data
+    }, {
+        headers: {}
+    })
+    .then((res) => console.log(res.data.id))
+    .catch((err) => console.log(err))
+    
+  };
 
   return (
     <>
