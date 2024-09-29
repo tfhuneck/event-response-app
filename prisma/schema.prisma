@@ -23,11 +23,13 @@ model Event {
 model Timeslot {
   id        String @unique @id @default(cuid())
   name      String
-  time      DateTime 
-  eventID   String @unique
+  time      DateTime
+  duration  Int 
+  eventID   String 
   event     Event @relation(fields: [eventID], references: [id])
-  filled    Int
-  open      Boolean
+  maxcount  Int
+  filled    Int @default(0)
+  open      Boolean @default(true)
   response  Response[]
 }
 

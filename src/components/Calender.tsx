@@ -18,7 +18,8 @@ const CalenderDate : React.FC<Props> = ({ dateData }) => {
   return (
     <Calendar
       mode="single"
-      selected={date}
+      selected={dateData}
+      month={dateData}
       // onSelect={setDate}
       className="rounded-md border"
     />

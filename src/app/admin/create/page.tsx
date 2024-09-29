@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Slot } from "@radix-ui/react-slot"
 import {
   Form,
   FormControl,
@@ -54,6 +53,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useRouter } from "next/navigation";
+
 
 interface Inputs {
   name: string
@@ -74,12 +75,11 @@ const eventSchema = z.object({
 })
 
 const Create = () => {
-
+  const router = useRouter();
   const [date, setDate] = React.useState<Date>() 
   const form = useForm<z.infer<typeof eventSchema>>({
     resolver: zodResolver(eventSchema)
   })
-  const {register, handleSubmit} = useForm<z.infer<typeof eventSchema>>()
 
   const onSubmit = (data : z.infer<typeof eventSchema> ) => {
     console.log(data)
@@ -88,7 +88,10 @@ const Create = () => {
     }, {
         headers: {}
     })
-    .then((res) => console.log(res.data.id))
+    .then((res) => {
+      console.log(res.data.id)
+      router.push(`/admin/event/${res.data.id}`)
+    })
     .catch((err) => console.log(err))
     
   };

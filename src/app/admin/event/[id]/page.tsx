@@ -1,7 +1,6 @@
 'use server'
 
 import * as React from "react";
-import axios from 'axios';
 import prisma from '@/lib/prisma';
 import {
   Card,
@@ -21,18 +20,35 @@ import {
 } from "@/components/ui/breadcrumb"
 import CalenderDate from "@/components/Calender";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { MoreVerticalIcon } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import SlotInput from "@/components/SlotInput";
+import SlotsList from "@/components/EventSlots";
+import { Toaster } from "@/components/ui/toaster";
 
-const Slots = async ({ params }: { params: { id: string } }) => {
 
+const Event = async ({ params }: { params: { id: string } }) => {
   const eventData = await prisma.event.findUnique({
     where: {
       id: params.id
     }
   })
 
-  console.log(eventData)
-  
+  const slotsData = await prisma.timeslot.findMany({
+    where:{
+      eventID: params.id
+    }
+  })
+
   return (
     <>
       <Breadcrumb className="my-2 mx-4">
@@ -49,9 +65,20 @@ const Slots = async ({ params }: { params: { id: string } }) => {
       <div className="h-screen flex flex-col mt-20 items-center">
         <div className="grid grid-cols-4 grid-flow-col gap-2">
           <Card className="w-full col-span-3">
-            <Button className="float-end mt-1 mr-1" variant='ghost'>
-              <MoreVerticalIcon />
-            </Button>
+            <div className="float-end mt-1 mr-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild >
+                  <Button size='icon' variant='ghost'>
+                    <MoreVerticalIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" >
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuSeparator/>
+                    <DropdownMenuItem className="focus:bg-red-200">Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
             <CardHeader className="text-xl font-bold">
               {eventData?.name}
               <div className="font-light italic text-sm mt-2" >
@@ -77,22 +104,17 @@ const Slots = async ({ params }: { params: { id: string } }) => {
               <div className="font-semibold my-4">
                 Event Time Slots
               </div>
-              <div>
-                {/* {eventData?.slots ? eventData.slots.map() => {
-                  return (
-                    <>
-                    </>
-                  )
-                }
-                 : 'No Slots'} */}
+              <div className="flex flex-col ">
+                <SlotsList
+                  slots={slotsData}
+                />
               </div>
             </CardContent>
             <CardFooter>
-              <Button
-                variant='default' 
-              >
-                Create Event Time Slot
-              </Button>
+              <SlotInput
+                params={eventData? eventData : {}}
+                eventDate={eventData ? eventData.date : new Date()}
+              />
             </CardFooter>
           </Card>
           <div className="flex flex-col items-end">
@@ -103,11 +125,10 @@ const Slots = async ({ params }: { params: { id: string } }) => {
             </div>
           </div>
         </div>
-         
-       
+        <Toaster />
       </div>
     </>
   )
 }
 
-export default Slots;
+export default Event;
