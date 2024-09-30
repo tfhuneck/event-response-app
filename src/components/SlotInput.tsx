@@ -30,6 +30,8 @@ import { TimePicker } from "./TimePicker";
 import { useRouter } from "next/navigation";
 
 
+
+
 interface Inputs {
   name: string
   date: Date
@@ -58,7 +60,7 @@ const SlotInput : React.FC<props> = ({params, eventDate}) => {
   const form = useForm<z.infer<typeof slotSchema>>({
     resolver: zodResolver(slotSchema)
   })
-  console.log(params)
+  // console.log(params)
   const slotObj = { 
     eventID : params?.id,
     maxcount : params?.maxcount,
@@ -67,7 +69,7 @@ const SlotInput : React.FC<props> = ({params, eventDate}) => {
 
   const onSubmit = (data : z.infer<typeof slotSchema> ) => {
     const slotData = {...data,...slotObj}
-    console.log(slotData)
+    // console.log(slotData)
     axios.post('api/create-slot',{
       slotData
     }, {

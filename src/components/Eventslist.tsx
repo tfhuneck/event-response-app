@@ -20,42 +20,57 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useRouter } from 'next/navigation';
 
+interface Props {
+  events: Event[]
+  date: Date | undefined;
+  setDate: (date: Date | undefined) => void;
+}
  
-interface SlotData {
-  slots: Slot[]
+interface Event {
+  id: String
+  name: String
+  date: Date
+  description: String
+  duration: Number
+  guestcount: Number
+  maxcount: Number
+}
+interface SetState {
+  
 }
 
-interface Slot {
-    id: string
-    name: string
-    time: Date
-    duration: Number
-    eventID: string
-    maxcount: Number
-    filled: Number
-    open: boolean
-}
+const EventList  = ({events, date, setDate}: Props) => {
+  const router = useRouter();
+  const eventRef = React.useRef<HTMLDivElement>(null)
 
-const SlotsList  = ({slots}: SlotData) => {
+  const eventSelect = (event: React.MouseEvent<HTMLDivElement>, date: Date) => {
+    setDate(date)
+  }
 
-  // React.useEffect(() => {
-  //   console.log(slots)
-  // }, [slots])
+  const navigate = (id: String) => {
+    router.push(`/admin/event/${id}`)
+  }
 
-  if(!slots.length){
+  if(!events.length){
     return (
       <>
-        No Timeslots
+        No Events
       </>
     )
   }
   else{
     return (
       <>
-        {slots.map((i) => {
+        {events.map((event) => {
           return (
-            <Card className='hover:bg-slate-100 my-1'>
+            <Card 
+              className='hover:bg-slate-100 my-1 cursor-pointer focus:bg-slate-100'
+              ref={eventRef}
+              onMouseEnter={(e) => eventSelect(e, event.date)}
+              onClick={() => navigate(event.id)}
+            >
               <div className="float-end mt-1 mr-1">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild >
@@ -73,20 +88,11 @@ const SlotsList  = ({slots}: SlotData) => {
                 </DropdownMenu>
               </div>
               <CardHeader>
-                <CardTitle>{i.name}</CardTitle>
-                <CardDescription>Startime: {i.time.toLocaleTimeString()}</CardDescription>
+                <CardTitle className='text-lg'>{event.name}</CardTitle>
+                <CardDescription>{event.date.toDateString()}</CardDescription>
               </CardHeader>
-              <CardContent>
-                <p>
-                  Length: {`${i.duration}`} min
-                </p>
-                <p>
-                  Maximum Guests: {`${i.maxcount}`}
-                </p>
-                <p>
-                  Confirmed Guest: {`${i.filled}`}
-                </p>
-              </CardContent>
+              {/* <CardContent>
+              </CardContent> */}
             </Card>
           )
         })}
@@ -95,4 +101,4 @@ const SlotsList  = ({slots}: SlotData) => {
   }
 }
 
-export default SlotsList; 
+export default EventList; 
