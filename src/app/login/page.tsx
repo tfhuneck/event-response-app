@@ -31,8 +31,8 @@ const logInSchema = z.object({
   }),
   password: z.string()
 })
-export const description =
-"App Authentication Login"
+// export const description =
+// "App Authentication Login"
 
 export function LoginForm() {
   const form = useForm()
