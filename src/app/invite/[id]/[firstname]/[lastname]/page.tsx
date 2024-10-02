@@ -19,6 +19,7 @@ import SlotsList from "@/components/EventSlots";
 import InviteSlots from "@/components/InviteSlots";
 import { Separator } from "@/components/ui/separator"
 import { Toaster } from "@/components/ui/toaster";
+import Response from "@/components/ReponseForm";
 
 const Invite = async ({ params }: { params: { id: string, firstname: string, lastname: string } }) => {
   const eventData = await prisma.event.findUnique({
@@ -58,7 +59,12 @@ const Invite = async ({ params }: { params: { id: string, firstname: string, las
             height={50}
             alt='TGNR'
           />
-        <Card className="w-full mt-14 col-span-3 border-0 bg-opacity-40 backdrop-blur-md hover:bg-opacity-80">
+          <Response 
+            params={params}
+            eventData={eventData}
+            slotsData={slotsData}
+          />
+        {/* <Card className="w-full mt-14 col-span-3 border-0 bg-opacity-40 backdrop-blur-md hover:bg-opacity-80">
           <CardHeader className="text-xl font-bold">
             <div className="flex flex-col items-center mt-4 p-20">
               <p  className="text-4xl font-thin">
@@ -78,20 +84,15 @@ const Invite = async ({ params }: { params: { id: string, firstname: string, las
               {eventData?.description}
             </div>
             <div className="font-semibold my-10">
-              Please choose on of the following Times 
+              Please choose one of the following Times 
             </div>
             <div className="flex flex-col ">
               <InviteSlots slots={slotsData}/>
             </div>
           </CardContent>
           <CardFooter>
-            <SlotInput
-              params={eventData? eventData : {}}
-              eventDate={eventData ? eventData.date : new Date()}
-            />
           </CardFooter>
-        </Card>
-        
+        </Card> */}
       </div>
       </main>
     </>

@@ -13,28 +13,34 @@ import {
 } from "@/components/ui/card"
 import { Ghost } from 'lucide-react';
  
-interface SlotData {
-  slots: Slot[]
+interface Props extends React.InputHTMLAttributes<HTMLInputElement>  {
+  slots: Slot[] | null
+  setTime : (time: Date | undefined) => void;
 }
 
 interface Slot {
-    id: string
-    name: string
-    time: Date
-    duration: Number
-    eventID: string
-    maxcount: Number
-    filled: Number
-    open: boolean
+  id: string
+  name: string
+  time: Date
+  duration: Number
+  eventID: string
+  maxcount: Number
+  filled: Number
+  open: boolean
 }
 
-const InviteSlots  = ({slots}: SlotData) => {
+const InviteSlots  = React.forwardRef<HTMLInputElement, Props> (({slots, setTime}) => {
 
-  // React.useEffect(() => {
-  //   console.log(slots)
-  // }, [slots])
+  const [ selected, setSelected ] = React.useState<String>()
 
-  if(!slots.length){
+  const handleCLick  = (i: Slot) => {
+    if(i.open){
+      setTime(i.time)
+      setSelected(i.id)
+    }
+  }
+
+  if(!slots?.length){
     return (
       <>
         No Timeslots
@@ -44,12 +50,20 @@ const InviteSlots  = ({slots}: SlotData) => {
   else{
     return (
       <>
-        {slots.map((i) => {
+        {slots?.map((i) => {
+          const cardClass =  (selected == i.id) ? "border-0 bg-opacity-100 bg-slate-300 h-30 my-1 cursor-pointer"
+            :i.open ? "border-0 bg-opacity-30 hover:bg-opacity-90 hover:bg-slate-200 h-30 my-1 cursor-pointer" 
+            : "border-0 bg-opacity-10 my-1 bg-slate-500 h-30"; 
           return (
-            <Card className='border-0 bg-opacity-30 hover:bg-opacity-90 hover:bg-slate-200 h-30 my-1 cursor-pointer'>
+            <Card 
+              className={cardClass}
+              onClick={() => handleCLick(i)}
+            >
               <CardHeader className='flex flex-col justify-center items-center'>
                 <CardTitle>{i.name}</CardTitle>
-                <CardDescription>Startime: {i.time.toLocaleTimeString()}</CardDescription>
+                <CardDescription>
+                  Startime: {i.time.toLocaleTimeString()} {i.open ? '' : ' – Booked'}
+                </CardDescription>
               </CardHeader>
             </Card>
           )
@@ -57,6 +71,6 @@ const InviteSlots  = ({slots}: SlotData) => {
       </>
     )
   }
-}
+})
 
 export default InviteSlots; 
