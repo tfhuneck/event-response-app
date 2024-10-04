@@ -1,5 +1,3 @@
-"use server"
-
 import * as React from "react";
 import AdminDash from "@/components/AdminDash";
 import prisma from '@/lib/prisma';
@@ -12,8 +10,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-export const revalidate = 0; // Always revalidate
-
+// export const revalidate = 0; // Always revalidate
+export const dynamic = 'force-dynamic
 const Dashboard = async () => {
   
   const eventData = await prisma.event.findMany()
