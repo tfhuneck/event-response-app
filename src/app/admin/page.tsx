@@ -12,7 +12,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 0; // Always revalidate
 
 const Dashboard = async () => {
   
