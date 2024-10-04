@@ -19,7 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-
+import { revalidatePath } from 'next/cache';
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Calendar as CalendarIcon } from "lucide-react"
@@ -91,6 +91,7 @@ const Create = () => {
     .then((res) => {
       console.log(res.data.id)
       router.push(`/admin/event/${res.data.id}`)
+      revalidatePath('/admin')
     })
     .catch((err) => console.log(err))
     
