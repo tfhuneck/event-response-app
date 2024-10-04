@@ -17,6 +17,8 @@ import {
 const Dashboard = async () => {
   
   const eventData = await prisma.event.findMany({})
+  console.log('eventdata at server component')
+  console.log(eventData)
 
   return (
     <>

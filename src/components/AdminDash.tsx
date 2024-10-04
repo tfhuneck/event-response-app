@@ -29,9 +29,9 @@ interface Event {
 }
 
 const AdminDash: React.FC<Props> = (props) => {
-
+  console.log('events at client admin dash component')
+  console.log(props)
   const [ date, setDate ] = React.useState<Date>()
- 
 
   return(
     <div className="h-screen flex flex-col items-center justify-center">

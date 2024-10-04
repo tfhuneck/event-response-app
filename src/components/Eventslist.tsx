@@ -44,7 +44,8 @@ interface SetState {
 const EventList  = ({events, date, setDate}: Props) => {
   const router = useRouter();
   const eventRef = React.useRef<HTMLDivElement>(null)
-
+  console.log('events at eventlist component')
+  console.log(events)
   const eventSelect = (event: React.MouseEvent<HTMLDivElement>, date: Date) => {
     setDate(date)
   }
