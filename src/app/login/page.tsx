@@ -34,7 +34,7 @@
 // // export const description =
 // // "App Authentication Login"
 
-export function LoginForm() {
+const LoginForm = () => {
   // const form = useForm()
   return (
     <>
