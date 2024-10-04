@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/breadcrumb"
 
 // export const revalidate = 0; // Always revalidate
-export const dynamic = 'force-dynamic
+export const dynamic = 'force-dynamic'
 const Dashboard = async () => {
   
   const eventData = await prisma.event.findMany()
