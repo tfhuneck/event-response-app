@@ -197,10 +197,11 @@ const Create = () => {
                   render={({field}) => (
                     <FormItem className="flex flex-col ">
                       <FormLabel>Event Slots duration</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}  
+                        <Select onValueChange={field.onChange} 
+                        // defaultValue={field.value}  
                         // {...register('duration', {valueAsNumber: true})}
                         >
-                          <FormControl>
+                          <FormControl>  
                             <SelectTrigger >
                               <SelectValue placeholder="Select Time Slot Length" />
                             </SelectTrigger>
