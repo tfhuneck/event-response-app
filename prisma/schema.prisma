@@ -38,8 +38,8 @@ model Response {
   firstName   String
   lastName    String
   email       String 
-  phone       Int?
   time        String
+  guestcount  Int
   timeslot    Timeslot @relation(fields: [time], references: [id])
 }
 

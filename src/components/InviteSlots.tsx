@@ -16,6 +16,8 @@ import { Ghost } from 'lucide-react';
 interface Props extends React.InputHTMLAttributes<HTMLInputElement>  {
   slots: Slot[] | null
   setTime : (time: Date | undefined) => void;
+  setSlotName : (slotName: String | undefined) => void;
+  setTimeId : (slotName: String | undefined) => void;
 }
 
 interface Slot {
@@ -29,7 +31,7 @@ interface Slot {
   open: boolean
 }
 
-const InviteSlots  = React.forwardRef<HTMLInputElement, Props> (({slots, setTime}) => {
+const InviteSlots  = React.forwardRef<HTMLInputElement, Props> (({slots, setTime, setSlotName, setTimeId}) => {
 
   const [ selected, setSelected ] = React.useState<String>()
 
@@ -37,7 +39,13 @@ const InviteSlots  = React.forwardRef<HTMLInputElement, Props> (({slots, setTime
     if(i.open){
       setTime(i.time)
       setSelected(i.id)
+      setTimeId(i.id)
+      setSlotName(i.name)
     }
+    window.scrollTo({
+      top: document.body.scrollHeight, 
+      behavior: 'smooth' // Optional for smooth scrolling
+    });
   }
 
   if(!slots?.length){
@@ -51,7 +59,7 @@ const InviteSlots  = React.forwardRef<HTMLInputElement, Props> (({slots, setTime
     return (
       <>
         {slots?.map((i) => {
-          const cardClass =  (selected == i.id) ? "border-0 bg-opacity-100 bg-slate-300 h-30 my-1 cursor-pointer"
+          const cardClass =  (selected == i.id) ? "border-0 drop-shadow-md shadow-inner bg-opacity-100 bg-slate-300 h-30 my-1 cursor-pointer"
             :i.open ? "border-0 bg-opacity-30 hover:bg-opacity-90 hover:bg-slate-200 h-30 my-1 cursor-pointer" 
             : "border-0 bg-opacity-10 my-1 bg-slate-500 h-30"; 
           return (
