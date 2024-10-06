@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from "react";
-import axios from 'axios';
+import axios from '@/lib/axiosInstance'
 import {
   Card,
   CardContent,
@@ -55,7 +55,6 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useRouter } from "next/navigation";
 
-
 interface Inputs {
   name: string
   date: Date
@@ -83,7 +82,7 @@ const Create = () => {
 
   const onSubmit = (data : z.infer<typeof eventSchema> ) => {
     console.log(data)
-    axios.post('api/create-event',{
+    axios.post('/api/create-event',{
       data
     }, {
         headers: {}

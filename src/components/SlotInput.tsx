@@ -1,10 +1,10 @@
 'use client'
 
 import * as React from "react";
-import axios from 'axios';
+import axios from '@/lib/axiosInstance'
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/components/hooks/use-toast"
 import {
   Dialog,
   DialogClose,

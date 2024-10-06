@@ -8,7 +8,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from "@/components/ui/breadcrumb";
+import { Toaster } from "@/components/ui/toaster";
 
 // export const revalidate = 0; // Always revalidate
 export const dynamic = 'force-dynamic'
@@ -30,6 +31,7 @@ const Dashboard = async () => {
     <AdminDash 
       events={eventData}
     />
+    <Toaster />
     </>
   )
 }

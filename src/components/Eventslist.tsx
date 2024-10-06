@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react';
+import axios from '@/lib/axiosInstance';
 import { Button } from './ui/button';
 import { Slot } from '@radix-ui/react-slot'
 import {
@@ -19,8 +20,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose
+} from "@/components/ui/dialog";
 import { useRouter } from 'next/navigation';
+import { useToast } from "@/components/hooks/use-toast"
 
 interface Props {
   events: Event[]
@@ -43,9 +55,11 @@ interface SetState {
 
 const EventList  = ({events, date, setDate}: Props) => {
   const router = useRouter();
+  const { toast } = useToast()
+  const [ eventsData, setEventsData ] = React.useState<Event[]>(events)
   const eventRef = React.useRef<HTMLDivElement>(null)
-  console.log('events at eventlist component')
-  console.log(events)
+  // console.log('events at eventlist component')
+  // console.log(events)
   const eventSelect = (event: React.MouseEvent<HTMLDivElement>, date: Date) => {
     setDate(date)
   }
@@ -54,7 +68,26 @@ const EventList  = ({events, date, setDate}: Props) => {
     router.push(`/admin/event/${id}`)
   }
 
-  if(!events.length){
+  const navigateEdit = (id: String) => {
+    router.push(`/admin/event/${id}/edit`)
+  }
+
+  const handleDelete = async (eventId : String) => {
+    const rmv = eventsData.filter((i) => i.id != eventId)
+    setEventsData(rmv)
+    axios.delete('api/delete-event',{
+      headers: { 'eventId': `${eventId}` }
+    },)
+    .then((res) => {
+      console.log(res)
+      toast({
+        title: "Event has been deleted"
+      })
+    })
+    .catch((err) => console.log(err))
+  }
+
+  if(!eventsData.length){
     return (
       <>
         No Events
@@ -64,31 +97,50 @@ const EventList  = ({events, date, setDate}: Props) => {
   else{
     return (
       <>
-        {events.map((event) => {
+        {eventsData.map((event, key) => {
           return (
             <Card 
               className='hover:bg-slate-100 my-1 cursor-pointer focus:bg-slate-100'
               ref={eventRef}
               onMouseEnter={(e) => eventSelect(e, event.date)}
-              onClick={() => navigate(event.id)}
+              key={key}
             >
               <div className="float-end mt-1 mr-1">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild >
-                    <Button size='icon' variant='ghost'>
-                      <MoreVerticalIcon />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" >
-                    <DropdownMenuItem>View</DropdownMenuItem>
-                    <DropdownMenuSeparator/>
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuSeparator/>
-                    <DropdownMenuItem className="focus:bg-red-200">Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Dialog>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Are you sure?</DialogTitle>
+                      <DialogDescription>
+                        This action cannot be undone. This item will be permanently deleted.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogClose>
+                      <Button variant='destructive' onClick={() => handleDelete(event.id)} className='w-52' >Delete</Button>
+                    </DialogClose>
+                  </DialogContent>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild >
+                      <Button size='icon' variant='ghost'>
+                        <MoreVerticalIcon />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" >
+                      <DropdownMenuItem onClick={() => navigate(event.id)}>
+                          View
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator/>
+                      <DropdownMenuItem onClick={() => navigateEdit(`${event.id}`)}>Edit</DropdownMenuItem>
+                      <DropdownMenuSeparator/>
+                      <DropdownMenuItem className="focus:bg-red-200">
+                        <DialogTrigger>Delete</DialogTrigger>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </Dialog>
               </div>
-              <CardHeader>
+              <CardHeader
+                onClick={() => navigate(event.id)}
+              >
                 <CardTitle className='text-lg'>{event.name}</CardTitle>
                 <CardDescription>{event.date.toDateString()}</CardDescription>
               </CardHeader>

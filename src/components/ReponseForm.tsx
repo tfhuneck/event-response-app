@@ -30,7 +30,7 @@ import { Separator } from "@/components/ui/separator"
 import InviteSlots from './InviteSlots'
 import { useRouter } from 'next/navigation';
 import { LoaderCircle } from 'lucide-react';
-import axios from 'axios'
+import axios from '@/lib/axiosInstance';
 
 interface props {
   params : params 

@@ -14,6 +14,9 @@ const Invite = async ({ params }: { params: { id: string, firstname: string, las
   const slotsData = await prisma.timeslot.findMany({
     where:{
       eventID: params.id
+    },
+    orderBy: {
+      time: 'asc',
     }
   })
 
