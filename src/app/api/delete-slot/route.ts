@@ -1,6 +1,7 @@
 'use server'
 
 import prisma from '@/lib/prisma'
+import { NextResponse } from 'next/server';
 
 export async function DELETE(req: Request, res: Response) {
     const slotId = await req.headers.get('slotId')
@@ -10,10 +11,10 @@ export async function DELETE(req: Request, res: Response) {
                 id: slotId!,
             },
         })
-        res = new Response(JSON.stringify(deleteSlot),{ status: 200, statusText: 'success'})
-        return res;
-    }catch(err){
-        return err;
+        return NextResponse.json({ message: 'Event deleted successfully' }, { status: 200 });
+    } catch (error) {
+        console.error('Error deleting event:', error);
+        return NextResponse.json({ error: 'Failed to delete event' }, { status: 500 });
     }
 }
 
