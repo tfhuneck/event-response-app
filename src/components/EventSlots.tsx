@@ -23,6 +23,7 @@ import {
   DialogClose
 } from "@/components/ui/dialog"
 import { MoreVerticalIcon } from "lucide-react";
+import { useRouter } from 'next/navigation';
 import { useToast } from "@/components/hooks/use-toast"
 import {
   DropdownMenu,
@@ -52,7 +53,7 @@ interface Slot {
 const SlotsList  = ({slots}: SlotData) => {
   const [ slotData, setSlotData ] = React.useState<Slot[]>(slots)
   const { toast } = useToast()
-
+  const router = useRouter();
   React.useEffect(() => {setSlotData(slots)}, [slots])
 
   const handleDelete = async (slotId : String) => {
@@ -68,6 +69,10 @@ const SlotsList  = ({slots}: SlotData) => {
       })
     })
     .catch((err) => console.log(err))
+  }
+
+  const navigateResponses = (id: String) => {
+    router.push(`/admin/event/${id}/responses`)
   }
 
   if(!slots.length){
@@ -103,7 +108,7 @@ const SlotsList  = ({slots}: SlotData) => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" >
-                      <DropdownMenuItem>View Responses</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigateResponses(`${i.eventID}`)}>View Responses</DropdownMenuItem>
                       <DropdownMenuSeparator/>
                       <DropdownMenuItem className="focus:bg-red-200">
                         <DialogTrigger>Delete</DialogTrigger>

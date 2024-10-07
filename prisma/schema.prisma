@@ -17,6 +17,7 @@ model Event {
   guestcount  Int
   maxcount    Int
   slots       Timeslot[]
+  response    Response[]
   alt         AltResponse?
 }
 
@@ -38,9 +39,12 @@ model Response {
   firstName   String
   lastName    String
   email       String 
-  time        String
   guestcount  Int
-  timeslot    Timeslot @relation(fields: [time], references: [id], onDelete: Cascade)
+  checkin     Boolean @default(false)
+  slotID      String
+  timeslot    Timeslot @relation(fields: [slotID], references: [id], onDelete: Cascade)
+  eventID     String 
+  event       Event @relation(fields: [eventID], references: [id], onDelete: Cascade)
 }
 
 model AltResponse {

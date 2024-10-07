@@ -34,6 +34,10 @@ import {
 import SlotInput from "@/components/SlotInput";
 import SlotsList from "@/components/EventSlots";
 import { useRouter } from 'next/navigation';
+import { useToast } from "@/components/hooks/use-toast";
+import { Description } from "@radix-ui/react-toast";
+
+
 
 interface Props {
   eventData: Event | null
@@ -64,7 +68,7 @@ interface Slot {
 const EventDetails: React.FC<Props> = ({eventData, slotsData }) => {
   
   const router = useRouter();
-  
+  const { toast } = useToast()
   const handleDelete = async (eventId : String) => {
     axios.delete('api/delete-event',{
       headers: { 'eventId': `${eventId}` }
@@ -82,6 +86,24 @@ const EventDetails: React.FC<Props> = ({eventData, slotsData }) => {
 
   const navigateEdit = (id: String) => {
     router.push(`/admin/event/${id}/edit`)
+  }
+
+  const navigateInvite = (id: String) => {
+    router.push(`/invite/${id}/Firstname/Lastname/example@mail.com`)
+  }
+ 
+  const navigateResponses = (id: String) => {
+    router.push(`/admin/event/${id}/responses`)
+  }
+
+  const copyInvite = (id: String) => {
+    const rootUrl = process.env.NEXT_PUBLIC_URL
+    const url = `${rootUrl}/invite/${id}/FNAME/LNAME/EMAIL`
+    navigator.clipboard.writeText(url)
+    toast({
+      title: "Url was copied to clipboad",
+      description: `${url} was copied`
+    })
   }
 
   return (
@@ -108,8 +130,16 @@ const EventDetails: React.FC<Props> = ({eventData, slotsData }) => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" >
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigateResponses(`${eventData?.id}`)} >
                       View Responses
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator/>
+                  <DropdownMenuItem onClick={() => navigateInvite(`${eventData?.id}`)} >
+                      View Invite
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator/>
+                  <DropdownMenuItem onClick={() => copyInvite(`${eventData?.id}`)} >
+                      Copy Invite Link
                   </DropdownMenuItem>
                   <DropdownMenuSeparator/>
                   <DropdownMenuItem onClick={() => navigateEdit(`${eventData?.id}`)} >Edit</DropdownMenuItem>

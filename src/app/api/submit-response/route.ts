@@ -5,18 +5,19 @@ import prisma from '@/lib/prisma'
 export async function POST(req: Request, res: Response) {
     const inputs = await req.json()
     console.log(inputs.responseData)
-    const {firstName, lastName, email, time, guestCount} = inputs.responseData
+    const {firstName, lastName, email, guestCount, slotID, eventID} = inputs.responseData
     const eventReponse = {
       firstName: firstName,
       lastName: lastName,
       email: email, 
-      time: time,
-      guestcount: guestCount
+      guestcount: guestCount,
+      slotID: slotID,
+      eventID: eventID,
     }
     const entry = await prisma.response.create({data: eventReponse});
     const updateTimeSlot = await prisma.timeslot.update({
       where:{
-        id: time
+        id: slotID
       },
       data: {
         filled: {
@@ -26,7 +27,7 @@ export async function POST(req: Request, res: Response) {
     })
     const timeSlot = await prisma.timeslot.findUnique({
       where: {
-        id: time
+        id: slotID
       }
     })
     if(timeSlot && timeSlot.filled >= timeSlot.maxcount ){

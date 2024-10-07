@@ -74,7 +74,7 @@ const capitalizeFirstLetter = (string : String) => {
 const Response : React.FC<props> = ({params, eventData, slotsData}) => {
   const router = useRouter();
   const [ time, setTime ] = React.useState<Date>();
-  const [ timeId, setTimeId ] = React.useState<String>();
+  const [ slotId, setSlotId ] = React.useState<String>();
   const [ slotName, setSlotName ] = React.useState<String>();
   const [ guestCount, setGuestCount ] = React.useState<number>() 
   const [ loading, setLoading ] = React.useState<boolean>(false)
@@ -92,7 +92,8 @@ const Response : React.FC<props> = ({params, eventData, slotsData}) => {
       firstName: params.firstname,
       lastName: params.lastname,
       email: params.email.replace(/%40/g, "@"),
-      time: timeId,
+      slotID: slotId,
+      eventID: params.id,
       guestCount: guestCount
     }
     console.log(responseData)
@@ -137,7 +138,7 @@ const Response : React.FC<props> = ({params, eventData, slotsData}) => {
               slots={slotsData}
               setTime={setTime}
               setSlotName={setSlotName}
-              setTimeId={setTimeId}
+              setSlotId={setSlotId}
             />
           </div>
         </CardContent>

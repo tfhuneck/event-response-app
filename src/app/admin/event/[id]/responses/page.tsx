@@ -9,24 +9,30 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Toaster } from "@/components/ui/toaster";
-import EventDetails from "@/components/EventDetails";
+import ResponseList from "@/components/ResponseList";
 
-const Event = async ({ params }: { params: { id: string } }) => {
+const Responses = async ({ params }: { params: { id: string } }) => {
 
+  const eventUrl = `/admin/event/${params.id}`
 
   const eventData = await prisma.event.findUnique({
     where: {
       id: params.id
     }
   })
-
+   
   const slotsData = await prisma.timeslot.findMany({
     where:{
       eventID: params.id
     }, 
     orderBy: {
       time: 'asc',
+    }
+  })
+
+  const responseData = await prisma.response.findMany({
+    where: {
+      eventID: params.id! 
     }
   })
 
@@ -39,19 +45,21 @@ const Event = async ({ params }: { params: { id: string } }) => {
           </BreadcrumbItem>
           <BreadcrumbSeparator/>
           <BreadcrumbItem>
-            <BreadcrumbPage> {eventData ? eventData?.name : 'Event'} </BreadcrumbPage>
+            <BreadcrumbLink href={eventUrl}>{eventData ? eventData?.name : 'Event'}</BreadcrumbLink>
           </BreadcrumbItem>
+          <BreadcrumbSeparator/>
+          <BreadcrumbItem>
+            <BreadcrumbPage> Responses </BreadcrumbPage>
+          </BreadcrumbItem> 
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="h-screen flex flex-col mt-20 items-center">
-        <EventDetails  
-          eventData={eventData}
-          slotsData={slotsData}
-        />
-        <Toaster />
-      </div>
+      <ResponseList 
+        eventData={eventData}
+        slotsData={slotsData}
+        responseData={responseData}
+      />
     </>
   )
 }
 
-export default Event;
+export default Responses;

@@ -20,9 +20,7 @@ const Invite = async ({ params }: { params: { id: string, firstname: string, las
     }
   })
 
-  const capitalizeFirstLetter = (string : String) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+
   return (
     <>
       <div className="fixed h-screen w-screen flex flex-col items-center justify-center pt-52 sm:pt-20 sm:px-10">
