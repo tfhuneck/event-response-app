@@ -18,6 +18,8 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement>  {
   setTime : (time: Date | undefined) => void;
   setSlotName : (slotName: String | undefined) => void;
   setSlotId : (slotName: String | undefined) => void;
+  selected : String | undefined;
+  setSelected: (id: String | undefined) => void;
 }
 
 interface Slot {
@@ -31,9 +33,9 @@ interface Slot {
   open: boolean
 }
 
-const InviteSlots  = React.forwardRef<HTMLInputElement, Props> (({slots, setTime, setSlotName, setSlotId}) => {
+const InviteSlots  = React.forwardRef<HTMLInputElement, Props> (({slots, setTime, setSlotName, setSlotId, selected, setSelected}) => {
 
-  const [ selected, setSelected ] = React.useState<String>()
+  // const [ selected, setSelected ] = React.useState<String>()
 
   const handleCLick  = (i: Slot) => {
     if(i.open){

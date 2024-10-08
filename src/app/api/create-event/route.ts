@@ -5,9 +5,10 @@ import prisma from '@/lib/prisma'
 export async function POST(req: Request, res: Response) {
     const inputs = await req.json()
     console.log(inputs)
-    const {name, date, description, duration, guestcount, maxcount} = inputs.data
+    const {name, dateStart, dateEnd, description, duration, guestcount, maxcount} = inputs.data
     const event ={
-      date: date,
+      dateStart: dateStart,
+      dateEnd: dateEnd,
       name: name,
       description: description,
       duration: duration, 

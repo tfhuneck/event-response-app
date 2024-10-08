@@ -36,18 +36,21 @@ import SlotsList from "@/components/EventSlots";
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/components/hooks/use-toast";
 import { Description } from "@radix-ui/react-toast";
-
+import AltSlotInput from "./AltSlotInput";
+import AltSlotsList from "./AltSlotList";
 
 
 interface Props {
   eventData: Event | null
   slotsData: Slot[]
+  altslotData: AltSlot[]
 }
 
 interface Event {
   id: String
   name: String
-  date: Date
+  dateStart: Date
+  dateEnd: Date
   description: String
   duration: Number
   guestcount: Number
@@ -64,8 +67,14 @@ interface Slot {
   filled: Number
   open: boolean
 }
+interface AltSlot {
+  id: string
+  name: string
+  description: string,
+  eventID: string
+}
 
-const EventDetails: React.FC<Props> = ({eventData, slotsData }) => {
+const EventDetails: React.FC<Props> = ({eventData, slotsData, altslotData }) => {
   
   const router = useRouter();
   const { toast } = useToast()
@@ -104,6 +113,11 @@ const EventDetails: React.FC<Props> = ({eventData, slotsData }) => {
       title: "Url was copied to clipboad",
       description: `${url} was copied`
     })
+  }
+
+  const date = {
+    from: eventData?.dateStart,
+    to: eventData?.dateEnd
   }
 
   return (
@@ -154,7 +168,7 @@ const EventDetails: React.FC<Props> = ({eventData, slotsData }) => {
           <CardHeader className="text-xl font-bold">
             {eventData?.name}
             <div className="font-light italic text-sm mt-2">
-              {eventData?.date.toDateString()}
+              {eventData?.dateStart.toDateString()} {eventData?.dateEnd != eventData?.dateStart ? ` - ${eventData?.dateEnd.toDateString()}` : ''}
             </div>
           </CardHeader>
           <CardContent className="max-w-3xl">
@@ -173,17 +187,26 @@ const EventDetails: React.FC<Props> = ({eventData, slotsData }) => {
             <div className="flex flex-col ">
               <SlotsList slots={slotsData} />
             </div>
+            <div className="font-semibold my-4">Alternative Slot</div>
+            <div className="flex flex-col ">
+              <AltSlotsList altslotData={altslotData} />
+            </div>
           </CardContent>
           <CardFooter>
             <SlotInput
               params={eventData ? eventData : {}}
-              eventDate={eventData ? eventData.date : new Date()}
+              eventDate={eventData ? eventData.dateStart : new Date()}
             />
+            <div className="ml-2">
+              <AltSlotInput 
+                params={eventData ? eventData : {}} 
+              />
+            </div>
           </CardFooter>
         </Card>
         <div className="flex flex-col items-end">
           <div className="col-span-1">
-            <CalenderDate dateData={eventData?.date} />
+            <CalenderDate dateData={date} />
           </div>
         </div>
       </div>

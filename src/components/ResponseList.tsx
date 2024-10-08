@@ -33,12 +33,14 @@ interface Props {
 interface Event {
   id: String
   name: String
-  date: Date
+  dateStart: Date
+  dateEnd: Date
   description: String
   duration: Number
   guestcount: Number
   maxcount: Number
 }
+
 
 interface Slot {
   id: string

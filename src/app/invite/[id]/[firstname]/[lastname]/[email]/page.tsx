@@ -20,6 +20,11 @@ const Invite = async ({ params }: { params: { id: string, firstname: string, las
     }
   })
 
+  const altslotData = await prisma.altslot.findMany({
+    where: {
+      eventID: params.id
+    }
+  })
 
   return (
     <>
@@ -47,6 +52,7 @@ const Invite = async ({ params }: { params: { id: string, firstname: string, las
             params={params}
             eventData={eventData}
             slotsData={slotsData}
+            altslotData={altslotData}
           />
         </div>
       </main>

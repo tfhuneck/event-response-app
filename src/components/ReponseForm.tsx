@@ -25,17 +25,21 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { Input } from './ui/input'
+import { Textarea } from './ui/textarea'
 import { Button } from './ui/button'
 import { Separator } from "@/components/ui/separator"
 import InviteSlots from './InviteSlots'
 import { useRouter } from 'next/navigation';
 import { LoaderCircle } from 'lucide-react';
 import axios from '@/lib/axiosInstance';
+import InviteAltSlot from './InviteAltSlot';
 
 interface props {
   params : params 
   eventData : eventData | null 
   slotsData : slotsData[] | null 
+  altslotData: AltSlot[] | null
 }
 
 interface params {
@@ -48,7 +52,8 @@ interface params {
 interface eventData {
   id: String
   name: String
-  date: Date
+  dateStart: Date
+  dateEnd: Date
   description: String
   duration: Number
   guestcount: Number
@@ -66,18 +71,27 @@ interface slotsData {
   open: boolean
 }[]
 
+interface AltSlot {
+  id: string
+  name: string
+  description: string,
+  eventID: string
+}
+
 const capitalizeFirstLetter = (string : String) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-
-const Response : React.FC<props> = ({params, eventData, slotsData}) => {
+const Response : React.FC<props> = ({params, eventData, slotsData, altslotData}) => {
   const router = useRouter();
   const [ time, setTime ] = React.useState<Date>();
   const [ slotId, setSlotId ] = React.useState<String>();
   const [ slotName, setSlotName ] = React.useState<String>();
   const [ guestCount, setGuestCount ] = React.useState<number>() 
   const [ loading, setLoading ] = React.useState<boolean>(false)
+  const [ selected, setSelected ] = React.useState<String>()
+  const [ alt, setAlt ] = React.useState<String>()
+  const [ comments, setComments ] = React.useState<string>()
 
   const guestCountOptions = React.useMemo(() => {
     if (eventData) {
@@ -85,7 +99,20 @@ const Response : React.FC<props> = ({params, eventData, slotsData}) => {
     }
     return [];
   }, [eventData]);
+
+  React.useEffect(() => {
+    setAlt(undefined)
+  }, [selected, setSelected])
+
+  React.useEffect(() => {
+    setSelected(undefined)
+    setTime(undefined)
+  }, [alt, setAlt])
   
+  const handleComments  = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setComments(event.target.value)
+  }
+
   const handleSubmit = async () => {
     setLoading(true)
     const responseData = {
@@ -109,6 +136,28 @@ const Response : React.FC<props> = ({params, eventData, slotsData}) => {
     .catch((err) => console.log(err))
   }
 
+  const handleSubmitAlt = async () => {
+    setLoading(true)
+    const responseData = {
+      firstName: params.firstname,
+      lastName: params.lastname,
+      email: params.email.replace(/%40/g, "@"),
+      eventID: params.id,
+      comment: comments,
+    }
+    console.log(responseData)
+    axios.post('api/submit-altresponse',{
+      responseData
+    }, {
+        headers: {}
+    })
+    .then((res) => {
+      console.log(res.data.id)
+      router.push(`/confirm/${params.firstname}/${params.lastname}`)
+    })
+    .catch((err) => console.log(err))
+  }
+
   return (
     <>
       <Card className="w-full mt-14 col-span-3 border-0 bg-opacity-40 backdrop-blur-md hover:bg-opacity-80">
@@ -119,7 +168,7 @@ const Response : React.FC<props> = ({params, eventData, slotsData}) => {
             </p>
             <Separator className="bg-slate-900 my-4"/>
             <p className="text-lg font-light">
-              {eventData?.date.toDateString()}
+              {eventData?.dateStart.toDateString()}
             </p>
           </div>
         </CardHeader>
@@ -139,11 +188,20 @@ const Response : React.FC<props> = ({params, eventData, slotsData}) => {
               setTime={setTime}
               setSlotName={setSlotName}
               setSlotId={setSlotId}
+              selected={selected}
+              setSelected={setSelected}
+            />
+          </div>
+          <div className="flex flex-col ">
+            <InviteAltSlot 
+              altslotData={altslotData}
+              selected={alt}
+              setSelected={setAlt} 
             />
           </div>
         </CardContent>
         <CardFooter className='flex flex-col justify-center mb-10'>
-          {time&& <Dialog>
+          {time && <Dialog>
             <DialogTrigger asChild>
               <Button 
                 className='h-12 w-36 text-lg' 
@@ -158,7 +216,7 @@ const Response : React.FC<props> = ({params, eventData, slotsData}) => {
                 <DialogDescription>
                   Please confirm how many Guests will be attending with you.
                   <p>
-                    You are invited to bring up to {`${eventData?.guestcount}`} Guests.
+                    You are invited to bring up to {`${Number(eventData?.guestcount) - 1}`} Guests.
                   </p>
                 </DialogDescription>
               </DialogHeader>
@@ -178,8 +236,8 @@ const Response : React.FC<props> = ({params, eventData, slotsData}) => {
                   <p className='font-semibold text-md mb-2'>
                     Timeslot: {`${slotName}`}
                   </p>
-                  <p>
-                    <Label>Please select Number of Guests</Label>
+                  <p  className='flex flex-col items-center' >
+                    <Label className='my-2'>Please select total Number of Guests attending</Label>
                     <Select
                       onValueChange={(value) => setGuestCount(Number(value))}
                     >
@@ -206,6 +264,45 @@ const Response : React.FC<props> = ({params, eventData, slotsData}) => {
                       Confirm
                     </Button>
                   }
+                </CardFooter>
+              </Card>
+            </DialogContent>
+          </Dialog>}
+          {alt && <Dialog>
+            <DialogTrigger asChild>
+              <Button 
+                className='h-12 w-36 text-lg' 
+                variant='default'
+              >
+                Continue
+              </Button>
+            </DialogTrigger>
+            <DialogContent className='font-serif'>
+              <DialogHeader>
+                <DialogTitle>Alternative Date Response</DialogTitle>
+                <DialogDescription>
+                </DialogDescription>
+              </DialogHeader>
+              <Card>
+                <CardHeader>
+                  We will contact you for an alternative Date
+                </CardHeader>
+                <CardContent className='flex flex-col items-center' >
+                  <p className='font-semibold text-lg'>
+                    {capitalizeFirstLetter(params.firstname)} {capitalizeFirstLetter(params.lastname)}
+                  </p>
+                  <Label htmlFor='comment' className='my-4'>Comments</Label>
+                  <Textarea id='comment' placeholder='optional' value={comments} onChange={handleComments} />
+                 
+                </CardContent>
+                <CardFooter className='flex flex-col items-center' >
+                  {loading && <LoaderCircle className='my-2 animate-spin'/>}
+                    <Button
+                      className="w-[180px]"
+                      onClick={() => handleSubmitAlt()}
+                    >
+                      Confirm
+                    </Button>
                 </CardFooter>
               </Card>
             </DialogContent>

@@ -14,7 +14,6 @@ import EventDetails from "@/components/EventDetails";
 
 const Event = async ({ params }: { params: { id: string } }) => {
 
-
   const eventData = await prisma.event.findUnique({
     where: {
       id: params.id
@@ -27,6 +26,12 @@ const Event = async ({ params }: { params: { id: string } }) => {
     }, 
     orderBy: {
       time: 'asc',
+    }
+  })
+
+  const altslotData = await prisma.altslot.findMany({
+    where: {
+      eventID: params.id
     }
   })
 
@@ -47,6 +52,7 @@ const Event = async ({ params }: { params: { id: string } }) => {
         <EventDetails  
           eventData={eventData}
           slotsData={slotsData}
+          altslotData={altslotData}
         />
         <Toaster />
       </div>

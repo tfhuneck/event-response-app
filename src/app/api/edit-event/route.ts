@@ -5,13 +5,14 @@ import prisma from '@/lib/prisma'
 export async function POST(req: Request, res: Response) {
     const reqData = await req.json()
 
-    const {id, description} = reqData.data
+    const {id, name, description} = reqData.data
 
     const update = await prisma.event.update({
       where: {
         id: id,
       },
       data: {
+        name: name,
         description: description
       }
     });

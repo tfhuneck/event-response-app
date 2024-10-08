@@ -22,7 +22,6 @@ import {
 import { revalidatePath } from 'next/cache';
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Calendar as CalendarIcon } from "lucide-react"
 import {
   Popover,
   PopoverContent,
@@ -31,7 +30,9 @@ import {
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns"
+import { addDays, format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+import { DateRange } from "react-day-picker"
 import { Calendar } from "@/components/ui/calendar"
 import {
   Breadcrumb,
@@ -57,44 +58,57 @@ import { useRouter } from "next/navigation";
 
 interface Inputs {
   name: string
-  date: Date
+  dateStart: Date
+  dateEnd: Date
   description: string
   duration: number
   guestcount: number
   maxcount: number
   }
 
-const eventSchema = z.object({
-  name: z.string(),
-  date: z.date(),
-  description: z.string(),
-  duration: z.coerce.number().positive(),
-  guestcount: z.coerce.number().positive(),
-  maxcount: z.coerce.number().positive()
-})
+  const eventSchema = z.object({
+    name: z.string(),
+    dateStart: z.date(),
+    dateEnd: z.date(),
+    description: z.string(),
+    duration: z.coerce.number().positive(),
+    guestcount: z.coerce.number().positive(),
+    maxcount: z.coerce.number().positive()
+  })
+  
 
 const Create = () => {
   const router = useRouter();
-  const [date, setDate] = React.useState<Date>() 
+  const [date, setDate] = React.useState<DateRange | undefined>()
+
   const form = useForm<z.infer<typeof eventSchema>>({
     resolver: zodResolver(eventSchema)
   })
 
-  const onSubmit = (data : z.infer<typeof eventSchema> ) => {
-    console.log(data)
-    axios.post('/api/create-event',{
-      data
-    }, {
-        headers: {}
-    })
-    .then((res) => {
-      console.log(res.data.id)
-      router.push(`/admin/event/${res.data.id}`)
-      revalidatePath('/admin')
-    })
-    .catch((err) => console.log(err))
-    
-  };
+ const onSubmit = (data: z.infer<typeof eventSchema>) => {
+  axios.post('/api/create-event', {
+    data: {
+      ...data,
+      dateStart: date?.from,
+      dateEnd: date?.to
+    }
+  })
+  .then((res) => {
+    router.push(`/admin/event/${res.data.id}`);
+    revalidatePath('/admin');
+  })
+  .catch((err) => console.log(err));
+};
+
+  // Set the date in the form whenever the date picker changes
+  React.useEffect(() => {
+    if (date?.from) {
+      form.setValue('dateStart', date.from);
+    }
+    if (date?.to) {
+      form.setValue('dateEnd', date.to);
+    }
+  }, [date, form]);
 
   return (
     <>
@@ -138,42 +152,45 @@ const Create = () => {
                 />
                 <FormField
                   control={form.control}
-                  name="date"
+                  name="dateStart"
                   render={({field}) => (
-                    <FormItem className="flex flex-col " >
-                    <FormLabel>Event Date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            
-                            // {...register('date')}
-                            variant={"outline"}
-                            className={cn(
-                              " pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
+                    <FormItem className="flex flex-row" >
+                      <FormLabel>Event Date Range</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn("pl-3 text-left font-normal", !date?.from && "text-muted-foreground")}
+                            >
+                              {date?.from ? (
+                                date.to ? (
+                                  <>
+                                    {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                                  </>
+                                ) : (
+                                  format(date.from, "LLL dd, y")
+                                )
+                              ) : (
+                                <span>Pick a date range</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="range"
+                            defaultMonth={date?.from}
+                            selected={date}
+                            onSelect={setDate}
+                            initialFocus
+                            numberOfMonths={2}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
                   )}
                 />
                 <FormField

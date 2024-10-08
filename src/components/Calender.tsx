@@ -2,14 +2,19 @@
 
 import * as React from "react"
 
+import { addDays, format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+import { DateRange } from "react-day-picker"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 
 interface Props {
-  dateData?: Date;
+  dateData?: DateRange;
 } 
 
 const CalenderDate : React.FC<Props> = ({ dateData }) => {
-  const [date, setDate] = React.useState<Date | undefined>(new Date())
+  const [date, setDate] = React.useState<DateRange | undefined>()
 
   React.useEffect(() => {
     setDate(dateData)
@@ -17,11 +22,12 @@ const CalenderDate : React.FC<Props> = ({ dateData }) => {
 
   return (
     <Calendar
-      mode="single"
+      mode="range"
+      defaultMonth={date?.from}
       selected={dateData}
-      month={dateData}
       // onSelect={setDate}
       className="rounded-md border"
+      numberOfMonths={1}
     />
   )
 }

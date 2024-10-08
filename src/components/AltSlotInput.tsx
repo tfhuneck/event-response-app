@@ -27,17 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useRouter } from "next/navigation";
-import { TimePicker } from "./TimePicker";
-import { add, format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-
+import { Textarea } from "./ui/textarea";
 
 interface Inputs {
   name: string
@@ -46,11 +36,10 @@ interface Inputs {
 
 const slotSchema = z.object({
   name: z.string(),
-  time: z.date(),
+  description: z.string(),
 })
 
 interface props {
-  eventDate: Date
   length?: Number
   params: {
     id?: String
@@ -59,9 +48,8 @@ interface props {
   }
 }
 
-const SlotInput : React.FC<props> = ({params, eventDate}) => {
+const AltSlotInput : React.FC<props> = ({params}) => {
   const router = useRouter()
-  const [date, setDate] = React.useState<Date>()
   const { reset } = useForm();
   const { toast } = useToast()
   const form = useForm<z.infer<typeof slotSchema>>({
@@ -70,14 +58,12 @@ const SlotInput : React.FC<props> = ({params, eventDate}) => {
   // console.log(params)
   const slotObj = { 
     eventID : params?.id,
-    maxcount : params?.maxcount,
-    duration : params?.duration
   }
 
   const onSubmit = (data : z.infer<typeof slotSchema> ) => {
     const slotData = {...data,...slotObj}
     // console.log(slotData)
-    axios.post('api/create-slot',{
+    axios.post('api/create-altslot',{
       slotData
     }, {
         headers: {}
@@ -85,7 +71,7 @@ const SlotInput : React.FC<props> = ({params, eventDate}) => {
     .then((res) => {
       console.log(res.data)
       toast({
-        title: "Event Slot added",
+        title: "Alternative Slot added",
         description: `${res.data.name} has been added`,
       })
       form.reset()
@@ -108,17 +94,14 @@ const SlotInput : React.FC<props> = ({params, eventDate}) => {
           <Button
             variant='default' 
           >
-            Create Event Time Slot
+            Create Event Alt Slot
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              Add Time Slot
+              Add Alternative Response Slot
             </DialogTitle>
-            <div className="font-thin text-sm">
-              Slot length: {`${params.duration}`} min
-            </div>
           </DialogHeader>
           <Form {...form}>
             <form
@@ -139,46 +122,19 @@ const SlotInput : React.FC<props> = ({params, eventDate}) => {
                 )}
               />
               <FormField
-                control={form.control}
-                name="time"
-                render={({field}) => (
-                  <FormItem>
-                    <FormLabel>Slot Date and Time</FormLabel>
-                    <FormControl>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-[280px] justify-start text-left font-normal",
-                              !date && "text-muted-foreground"
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {date ? format(date, "PPP HH:mm:ss") : <span>Pick a date</span>}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              initialFocus
-                          />
-                          <div className="p-3 border-t border-border">
-                            <TimePicker
-                              date={field.value}
-                              setDate={field.onChange} 
-                            />
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                    </FormControl>
-                    <FormDescription />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  control={form.control}
+                  name="description"
+                  render={({field}) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Event Description" {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               <DialogClose>
                 <Button type="submit">
                   Create
@@ -192,4 +148,4 @@ const SlotInput : React.FC<props> = ({params, eventDate}) => {
   )
 }
 
-export default SlotInput;
+export default AltSlotInput;

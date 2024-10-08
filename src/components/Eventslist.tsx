@@ -33,17 +33,19 @@ import {
 } from "@/components/ui/dialog";
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/components/hooks/use-toast"
+import { DateRange } from "react-day-picker"
 
 interface Props {
   events: Event[]
-  date: Date | undefined;
-  setDate: (date: Date | undefined) => void;
+  date: DateRange | undefined;
+  setDate: (date: DateRange | undefined) => void;
 }
  
 interface Event {
   id: String
   name: String
-  date: Date
+  dateStart: Date
+  dateEnd: Date
   description: String
   duration: Number
   guestcount: Number
@@ -60,7 +62,11 @@ const EventList  = ({events, date, setDate}: Props) => {
   const eventRef = React.useRef<HTMLDivElement>(null)
   // console.log('events at eventlist component')
   // console.log(events)
-  const eventSelect = (event: React.MouseEvent<HTMLDivElement>, date: Date) => {
+  const eventSelect = (event: React.MouseEvent<HTMLDivElement>, dateStart: Date, dateEnd: Date) => {
+    const date ={
+      from: dateStart,
+      to: dateEnd
+    }
     setDate(date)
   }
 
@@ -102,7 +108,7 @@ const EventList  = ({events, date, setDate}: Props) => {
             <Card 
               className='hover:bg-slate-100 my-1 cursor-pointer focus:bg-slate-100'
               ref={eventRef}
-              onMouseEnter={(e) => eventSelect(e, event.date)}
+              onMouseEnter={(e) => eventSelect(e, event.dateStart, event.dateEnd)}
               key={key}
             >
               <div className="float-end mt-1 mr-1">
@@ -142,7 +148,7 @@ const EventList  = ({events, date, setDate}: Props) => {
                 onClick={() => navigate(event.id)}
               >
                 <CardTitle className='text-lg'>{event.name}</CardTitle>
-                <CardDescription>{event.date.toDateString()}</CardDescription>
+                <CardDescription>{event.dateStart.toDateString()}</CardDescription>
               </CardHeader>
               {/* <CardContent>
               </CardContent> */}

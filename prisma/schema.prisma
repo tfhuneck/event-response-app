@@ -11,14 +11,16 @@ datasource db {
 model Event {
   id          String @unique @id @default(cuid())
   name        String
-  date        DateTime
+  dateStart   DateTime
+  dateEnd     DateTime
   description String
   duration    Int
   guestcount  Int
   maxcount    Int
   slots       Timeslot[]
   response    Response[]
-  alt         AltResponse?
+  altslot     Altslot[]
+  altresponse AltResponse[]
 }
 
 model Timeslot {
@@ -32,6 +34,14 @@ model Timeslot {
   filled    Int @default(0)
   open      Boolean @default(true)
   response  Response[]
+}
+
+model Altslot {
+  id          String @unique @id @default(cuid())
+  name        String
+  description String
+  eventID     String 
+  event       Event @relation(fields: [eventID], references: [id], onDelete: Cascade)
 }
 
 model Response {
@@ -52,8 +62,7 @@ model AltResponse {
   firstName   String
   lastName    String
   email       String 
-  phone       Int?
   comment     String?
-  eventID     String @unique
+  eventID     String 
   event       Event @relation(fields: [eventID], references: [id], onDelete: Cascade)
 }

@@ -13,6 +13,7 @@ import { Button } from "./ui/button";
 import CalenderDate from "./Calender";
 import { ScrollArea } from "./ui/scroll-area"
 import EventList from "./Eventslist";
+import { DateRange } from "react-day-picker"
 
 interface Props {
   events: Event[]
@@ -21,7 +22,8 @@ interface Props {
 interface Event {
   id: String
   name: String
-  date: Date
+  dateStart: Date
+  dateEnd: Date
   description: String
   duration: Number
   guestcount: Number
@@ -31,7 +33,7 @@ interface Event {
 const AdminDash: React.FC<Props> = (props) => {
   console.log('events at client admin dash component')
   console.log(props)
-  const [ date, setDate ] = React.useState<Date>()
+  const [date, setDate] = React.useState<DateRange | undefined>()
 
   return(
     <div className="h-screen flex flex-col items-center justify-center">

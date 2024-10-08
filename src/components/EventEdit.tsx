@@ -10,6 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -19,9 +21,10 @@ interface Props {
 }
 
 interface Event {
-  id: string
+  id: String
   name: string
-  date: Date
+  dateStart: Date
+  dateEnd: Date
   description: string
   duration: Number
   guestcount: Number
@@ -39,8 +42,12 @@ const EditForm : React.FC<Props> = ({ eventData }) => {
   }
   
   const router = useRouter();
-  const [text, setText] = React.useState<string>(eventData.description);
+  const [ title, setTitle ] = React.useState<string>(eventData.name);
+  const [ text, setText ] = React.useState<string>(eventData.description);
 
+  const handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
   };
@@ -51,6 +58,7 @@ const EditForm : React.FC<Props> = ({ eventData }) => {
     const id = eventData.id
     const data = {
       'id': id,
+      'name' : title,
       'description' : text,
     }
     await axios.post('/api/edit-event',{
@@ -69,7 +77,7 @@ const EditForm : React.FC<Props> = ({ eventData }) => {
   return (
     <>
       <div className="h-screen flex flex-col items-center justify-center">
-        <Card className="w-96">
+        <Card className="w-[500px]">
           <CardHeader>
             <div className="font-bold text-2xl" >
               Edit {`${eventData?.name}`}
@@ -77,6 +85,8 @@ const EditForm : React.FC<Props> = ({ eventData }) => {
           </CardHeader>
           <CardContent>
             <form className="space-y-6">
+              <Label htmlFor="title" >Event Name</Label>
+              <Input id="title" type="text"  value={title} onChange={handleChangeTitle}></Input>
               <Textarea placeholder="Event Description" value={text} onChange={handleChange}/>
               <div className="flex flex-col justify-center mt-4">
                 <Button onClick={(e) => onSubmit(e)} >

@@ -14,7 +14,6 @@ export interface TimePickerInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   picker: TimePickerType;
   date: Date | undefined;
-  eventDate: Date;
   setDate: (date: Date | undefined) => void;
   period?: Period;
   onRightFocus?: () => void;
@@ -32,8 +31,7 @@ const TimePickerInput = React.forwardRef<
       value,
       id,
       name,
-      eventDate,
-      date = new Date(eventDate.setHours(0, 0, 0, 0)),
+      date = new Date(new Date().setHours(0, 0, 0, 0)),
       setDate,
       onChange,
       onKeyDown,
@@ -52,7 +50,6 @@ const TimePickerInput = React.forwardRef<
      * allow the user to enter the second digit within 2 seconds
      * otherwise start again with entering first digit
      */
-
     React.useEffect(() => {
       if (flag) {
         const timer = setTimeout(() => {
