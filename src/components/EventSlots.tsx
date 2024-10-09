@@ -119,7 +119,7 @@ const SlotsList  = ({slots}: SlotData) => {
               </div>
               <CardHeader>
                 <CardTitle>{i.name}</CardTitle>
-                <CardDescription>Startime: {i.time.toLocaleTimeString()}</CardDescription>
+                <CardDescription>Startime: {i.time.toDateString()} {i.time.toLocaleTimeString()}</CardDescription>
               </CardHeader>
               <CardContent>
                 <p>

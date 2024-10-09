@@ -131,7 +131,7 @@ const SlotInput : React.FC<props> = ({params, eventDate}) => {
                   <FormItem>
                     <FormLabel>Slot Name</FormLabel>
                     <FormControl>
-                    <Input type="text" placeholder="Slot Name" {...field} />
+                      <Input type="text" placeholder="Slot Name" {...field} />
                     </FormControl>
                     <FormDescription />
                     <FormMessage />
@@ -155,7 +155,7 @@ const SlotInput : React.FC<props> = ({params, eventDate}) => {
                             )}
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
-                            {date ? format(date, "PPP HH:mm:ss") : <span>Pick a date</span>}
+                            {field.value ? format(field.value, "PPP HH:mm:ss") : <span>Pick a date</span>}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">

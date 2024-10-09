@@ -66,3 +66,9 @@ model AltResponse {
   eventID     String 
   event       Event @relation(fields: [eventID], references: [id], onDelete: Cascade)
 }
+
+model User {
+  id        String @unique @id @default(cuid())
+  email     String   @unique
+  password  String
+}

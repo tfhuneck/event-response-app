@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
-import { signIn } from "@/lib/auth"
+// import { signIn } from "@/lib/auth"
 import {
   Card,
   CardContent,
@@ -39,7 +39,7 @@ const LoginForm = () => {
   return (
     <>
       <div className="h-screen flex flex-col items-center justify-center">
-        <Card className="w-full max-w-sm">
+        {/* <Card className="w-full max-w-sm">
           <CardHeader>
             <CardTitle className="text-2xl">Login</CardTitle>
             <CardDescription>
@@ -87,7 +87,7 @@ const LoginForm = () => {
           </CardContent>
           <CardFooter>
           </CardFooter>
-        </Card>
+        </Card> */}
       </div>
     </>
   )

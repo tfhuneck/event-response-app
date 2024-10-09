@@ -86,13 +86,13 @@ const ResponseList : React.FC<Props> = ({eventData, slotsData, responseData} : P
 
   return (
     <>
-      <div className='flex flex-col items-center'>
+      <div className='flex flex-col items-center mt-10 min-h-screen'>
         <Tabs defaultValue={slotsData[0].id} >
-          <TabsList className={`grid w-full grid-cols-${slotsData.length}`}>
+          <TabsList className={`mb-2 h-14`}>
             {slotsData.map((slot, key) => {
               return (
                 <>
-                  <TabsTrigger key={key} value={slot.id} className='min-w-32'>{slot.name}</TabsTrigger>
+                  <TabsTrigger key={key} value={slot.id} className='min-w-32 h-12'>{slot.name}</TabsTrigger>
                 </>
               )
             })}
