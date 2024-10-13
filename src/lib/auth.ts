@@ -1,50 +1,49 @@
-// import 'server-only'
-// // lib/auth.ts
-// import NextAuth from "next-auth";
-// import CredentialsProvider from "next-auth/providers/credentials";
-// import prisma from "@/lib/prisma"; // Ensure Prisma client is available
+import NextAuth from "next-auth"
+import Credentials from "next-auth/providers/credentials"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import prisma from "./prisma"
+ 
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  session: { strategy: "jwt" },
+  providers: [
+    Credentials({
+      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      credentials: {
+        username: {
+          label: 'username',
+          type: 'text',
+          placeholder: 'enter username'
+        },
+        password: {
+          label: 'password',
+          type: 'password'
+        },
+      },
+      authorize: async (credentials) => {
 
-// export const authOptions = {
-//   providers: [
-//     CredentialsProvider({
-//       name: "Credentials",
-//       credentials: {
-//         email: { label: "Email", type: "text", placeholder: "email@example.com" },
-//         password: { label: "Password", type: "password" },
-//       },
-//       authorize: async (credentials) => {
-//         const user = await prisma.user.findUnique({
-//           where: { email: credentials?.email },
-//         });
+        if (!credentials?.username || !credentials?.password) {
+          throw new Error("Invalid credentials");
+        }
+       
+        const  user = await prisma.user.findUnique({
+          where: {
+            username: credentials.username
+          }
+        })
 
-//         if (user && user.password === credentials?.password) {
-//           return user;
-//         }
-
-//         return null;
-//       },
-//     }),
-//   ],
-//   session: {
-//     strategy: "jwt",
-//   },
-//   callbacks: {
-//     async jwt({ token, user }) {
-//       if (user) {
-//         token.id = user.id;
-//       }
-//       return token;
-//     },
-//     async session({ session, token }) {
-//       if (token) {
-//         session.id = token.id;
-//       }
-//       return session;
-//     },
-//   },
-//   pages: {
-//     signIn: "/login",
-//   },
-// };
-
-// export default NextAuth(authOptions);
+        // if(!user || )
+         
+        if (!user) {
+          // No user found, so this is their first attempt to login
+          // meaning this is also the place you could do registration
+          throw new Error("User not found.")
+        }
+        // return user object with their profile data
+        return user
+      },
+    }),
+   
+  ],
+})

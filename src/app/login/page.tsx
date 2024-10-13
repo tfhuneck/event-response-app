@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
-// import { signIn } from "@/lib/auth"
+import { signIn } from "@/lib/auth"
 import {
   Card,
   CardContent,
@@ -31,15 +31,19 @@ const logInSchema = z.object({
   }),
   password: z.string()
 })
-// export const description =
-// "App Authentication Login"
+
 
 const LoginForm = () => {
   const form = useForm()
+
+  const onSubmit = async (values: z.infer<typeof logInSchema>) => {
+    await signIn(values)
+  }
+
   return (
     <>
       <div className="h-screen flex flex-col items-center justify-center">
-        {/* <Card className="w-full max-w-sm">
+        <Card className="w-full max-w-sm">
           <CardHeader>
             <CardTitle className="text-2xl">Login</CardTitle>
             <CardDescription>
@@ -49,7 +53,7 @@ const LoginForm = () => {
           <CardContent className="grid gap-4">
             <Form {...form}>
               <form 
-                // onSubmit={form.handleSubmit(signIn)} 
+                onSubmit={form.handleSubmit(onSubmit)} 
                 className="space-y-8"
               >
                 <FormField
@@ -57,9 +61,9 @@ const LoginForm = () => {
                   name="username"
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input {...field} id="email" type="email" placeholder="user@example.com" required/>
+                        <Input {...field} id="username" type="text" placeholder="username" required/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -87,7 +91,7 @@ const LoginForm = () => {
           </CardContent>
           <CardFooter>
           </CardFooter>
-        </Card> */}
+        </Card>
       </div>
     </>
   )

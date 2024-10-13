@@ -72,7 +72,7 @@ const InviteSlots  = React.forwardRef<HTMLInputElement, Props> (({slots, setTime
               <CardHeader className='flex flex-col justify-center items-center'>
                 <CardTitle>{i.name}</CardTitle>
                 <CardDescription>
-                  Startime: {i.time.toLocaleTimeString()} {i.open ? '' : ' – Booked'}
+                 {i.time.toDateString()} {i.open ? '' : ' – Booked'}
                 </CardDescription>
               </CardHeader>
             </Card>

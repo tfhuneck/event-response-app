@@ -22,11 +22,11 @@ interface Props {
 interface Event {
   id: String
   name: String
+  tag: String
   dateStart: Date
   dateEnd: Date
   description: String
   duration: Number
-  guestcount: Number
   maxcount: Number
 }
 

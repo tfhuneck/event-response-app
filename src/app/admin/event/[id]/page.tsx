@@ -35,6 +35,8 @@ const Event = async ({ params }: { params: { id: string } }) => {
     }
   })
 
+  console.log(eventData)
+
   return (
     <>
       <Breadcrumb className="my-2 mx-4">

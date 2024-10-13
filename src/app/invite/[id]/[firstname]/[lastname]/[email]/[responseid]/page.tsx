@@ -3,8 +3,10 @@
 import Image from "next/image";
 import prisma from '@/lib/prisma';
 import Response from "@/components/ReponseForm";
+import { redirect } from 'next/navigation'
 
-const Invite = async ({ params }: { params: { id: string, firstname: string, lastname: string, email: string } }) => {
+
+const Invite = async ({ params }: { params: { id: string, firstname: string, lastname: string, email: string, responseid: string } }) => {
   const eventData = await prisma.event.findUnique({
     where: {
       id: params.id
@@ -26,6 +28,26 @@ const Invite = async ({ params }: { params: { id: string, firstname: string, las
     }
   })
 
+  const responseData = await prisma.response.findUnique({
+    where: {
+      responseID: params.responseid
+    }
+  })
+
+  const altresponseData = await prisma.altResponse.findUnique({
+    where: {
+      responseID: params.responseid
+    }
+  })
+
+  if(responseData){
+    redirect(`/confirm/${params.responseid}`)
+  }
+
+  if(altresponseData){
+    redirect(`/confirm/alt/${params.responseid}`)
+  }
+
   return (
     <>
       <div className="fixed h-screen w-screen flex flex-col items-center justify-center pt-52 sm:pt-20 sm:px-10">
@@ -41,13 +63,7 @@ const Invite = async ({ params }: { params: { id: string, firstname: string, las
         </div>
       </div>
       <main className="h-screen flex flex-col items-center justify-center font-serif z-10">
-        <div className="h-screen flex flex-col mt-32 items-center">
-          <Image 
-            src='/TGR_VERT_BLK-GLD.png'
-            width={50}
-            height={50}
-            alt='TGNR'
-          />
+        <div className="h-screen flex flex-col mt-48 items-center sm:w-8/12 2xl:w-6/12">
           <Response 
             params={params}
             eventData={eventData}

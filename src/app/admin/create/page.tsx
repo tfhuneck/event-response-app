@@ -58,21 +58,21 @@ import { useRouter } from "next/navigation";
 
 interface Inputs {
   name: string
+  tag: string
   dateStart: Date
   dateEnd: Date
   description: string
   duration: number
-  guestcount: number
   maxcount: number
   }
 
   const eventSchema = z.object({
     name: z.string(),
+    tag: z.string(),
     dateStart: z.date(),
     dateEnd: z.date(),
     description: z.string(),
     duration: z.coerce.number().positive(),
-    guestcount: z.coerce.number().positive(),
     maxcount: z.coerce.number().positive()
   })
   
@@ -152,16 +152,31 @@ const Create = () => {
                 />
                 <FormField
                   control={form.control}
+                  name="tag"
+                  render={({field}) => (
+                    <FormItem>
+                      <FormLabel>Event Tag</FormLabel>
+                      <FormControl>
+                        <Input type="text" placeholder="Event Name" {...field} 
+                        // {...register('name')}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
                   name="dateStart"
                   render={({field}) => (
-                    <FormItem className="flex flex-row" >
-                      <FormLabel>Event Date Range</FormLabel>
+                    <FormItem>
+                      <FormLabel>Event Date Range</FormLabel> 
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
                               variant={"outline"}
-                              className={cn("pl-3 text-left font-normal", !date?.from && "text-muted-foreground")}
+                              className={cn("pl-3 text-left font-normal w-full", !date?.from && "text-muted-foreground")}
                             >
                               {date?.from ? (
                                 date.to ? (
@@ -239,25 +254,10 @@ const Create = () => {
                   name="maxcount"
                   render={({field}) => (
                     <FormItem>
-                      <FormLabel>Maximum Guest Count per Timeslot</FormLabel>
+                      <FormLabel>Maximum Responses per Timeslot</FormLabel>
                       <FormControl>
                         <Input type="number" placeholder="max guest count per slot" {...field} 
                         // {...register('maxcount', {valueAsNumber: true})}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="guestcount"
-                  render={({field}) => (
-                    <FormItem>
-                      <FormLabel>Maximum Guest Count per Invitation</FormLabel>
-                      <FormControl>
-                        <Input type="number" placeholder="max guest count per invitation" {...field} 
-                        // {...register('guestcount', {valueAsNumber: true})}
                         />
                       </FormControl>
                       <FormMessage />

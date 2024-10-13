@@ -33,11 +33,11 @@ interface Props {
 interface Event {
   id: String
   name: String
+  tag: String
   dateStart: Date
   dateEnd: Date
   description: String
   duration: Number
-  guestcount: Number
   maxcount: Number
 }
 
@@ -58,7 +58,6 @@ interface Response {
   firstName: string
   lastName: string
   email: string 
-  guestcount: number
   checkin: boolean
   slotID: string
   eventID: string 
@@ -113,7 +112,6 @@ const ResponseList : React.FC<Props> = ({eventData, slotsData, responseData} : P
                           <TableHead>Firstname</TableHead>
                           <TableHead>Lastname</TableHead>
                           <TableHead>email</TableHead>
-                          <TableHead>Guestcount</TableHead>
                           <TableHead>Checked In</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -125,7 +123,6 @@ const ResponseList : React.FC<Props> = ({eventData, slotsData, responseData} : P
                               <TableCell className="font-medium">{response.firstName}</TableCell>
                               <TableCell>{response.lastName}</TableCell>
                               <TableCell>{response.email}</TableCell>
-                              <TableCell className="text-right">{response.guestcount}</TableCell>
                               <TableCell className="text-right">
                                 <div className="flex items-center space-x-2">
                                   <Switch 

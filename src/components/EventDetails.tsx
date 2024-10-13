@@ -38,7 +38,8 @@ import { useToast } from "@/components/hooks/use-toast";
 import { Description } from "@radix-ui/react-toast";
 import AltSlotInput from "./AltSlotInput";
 import AltSlotsList from "./AltSlotList";
-
+import ReactMarkdown from "react-markdown";
+import remarkGfm from 'remark-gfm';
 
 interface Props {
   eventData: Event | null
@@ -49,11 +50,11 @@ interface Props {
 interface Event {
   id: String
   name: String
+  tag: String
   dateStart: Date
   dateEnd: Date
   description: String
   duration: Number
-  guestcount: Number
   maxcount: Number
 }
 
@@ -98,7 +99,7 @@ const EventDetails: React.FC<Props> = ({eventData, slotsData, altslotData }) => 
   }
 
   const navigateInvite = (id: String) => {
-    router.push(`/invite/${id}/Firstname/Lastname/example@mail.com`)
+    router.push(`/invite/${id}/Firstname/Lastname/example@mail.com/id1234`)
   }
  
   const navigateResponses = (id: String) => {
@@ -119,6 +120,8 @@ const EventDetails: React.FC<Props> = ({eventData, slotsData, altslotData }) => 
     from: eventData?.dateStart,
     to: eventData?.dateEnd
   }
+
+  console.log(eventData?.description)
 
   return (
     <>
@@ -178,11 +181,16 @@ const EventDetails: React.FC<Props> = ({eventData, slotsData, altslotData }) => 
             <div className="font-normal text-sm">
               Max Guest per Slot: {`${eventData?.maxcount}`}
             </div>
-            <div className="font-normal text-sm">
-              Max Guestcount per Invite: {`${eventData?.guestcount}`}
-            </div>
             <div className="font-semibold my-4">Event Description</div>
-            <div className="">{eventData?.description}</div>
+            <div className="">
+              <ReactMarkdown 
+                remarkPlugins={[remarkGfm]} 
+                components={{
+                  p: ({ node, ...props }) => <p style={{ margin: '20px 0' }} {...props} />
+                }}
+                children={`${eventData?.description}`}
+              />
+            </div>
             <div className="font-semibold my-4">Event Time Slots</div>
             <div className="flex flex-col ">
               <SlotsList slots={slotsData} />

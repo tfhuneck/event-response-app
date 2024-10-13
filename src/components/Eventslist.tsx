@@ -44,11 +44,11 @@ interface Props {
 interface Event {
   id: String
   name: String
+  tag: String
   dateStart: Date
   dateEnd: Date
   description: String
   duration: Number
-  guestcount: Number
   maxcount: Number
 }
 interface SetState {
@@ -147,7 +147,7 @@ const EventList  = ({events, date, setDate}: Props) => {
               <CardHeader
                 onClick={() => navigate(event.id)}
               >
-                <CardTitle className='text-lg'>{event.name}</CardTitle>
+                <CardTitle className='text-lg'>{event.tag}</CardTitle>
                 <CardDescription>{event.dateStart.toDateString()}</CardDescription>
               </CardHeader>
               {/* <CardContent>

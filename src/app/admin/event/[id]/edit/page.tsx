@@ -60,7 +60,6 @@ interface Inputs {
   date: Date
   description: string
   duration: number
-  guestcount: number
   maxcount: number
   }
 
@@ -69,7 +68,6 @@ const eventSchema = z.object({
   date: z.date(),
   description: z.string(),
   duration: z.coerce.number().positive(),
-  guestcount: z.coerce.number().positive(),
   maxcount: z.coerce.number().positive()
 })
 

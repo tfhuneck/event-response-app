@@ -136,7 +136,7 @@ const AltSlotInput : React.FC<props> = ({params}) => {
                   )}
                 />
               <DialogClose>
-                <Button type="submit">
+                <Button type="submit" className="mt-2">
                   Create
                 </Button>
               </DialogClose>

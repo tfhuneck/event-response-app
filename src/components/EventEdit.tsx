@@ -27,7 +27,6 @@ interface Event {
   dateEnd: Date
   description: string
   duration: Number
-  guestcount: Number
   maxcount: Number
 }
 
