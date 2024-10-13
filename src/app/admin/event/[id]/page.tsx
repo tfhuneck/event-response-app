@@ -11,8 +11,19 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Toaster } from "@/components/ui/toaster";
 import EventDetails from "@/components/EventDetails";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 const Event = async ({ params }: { params: { id: string } }) => {
+
+  //===================AUTH=========================
+  const session = await auth()
+
+  if (!session?.user) {
+    // Redirect to login if no session is found
+    redirect("/login");
+  }
+  //===================AUTH=========================
 
   const eventData = await prisma.event.findUnique({
     where: {
