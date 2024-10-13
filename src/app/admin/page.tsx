@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Toaster } from "@/components/ui/toaster";
 import { redirect } from "next/navigation";
-// import { authOptions } from "@/lib/auth";
-// import { getServerSession } from "next-auth";
-// export const revalidate = 0; // Always revalidate
+import { auth } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
+import { signOut } from "@/lib/auth";
 
 // force fetch updates to prevent stale data
 export const dynamic = 'force-dynamic'
@@ -22,12 +22,12 @@ export const dynamic = 'force-dynamic'
 const Dashboard = async () => {
 
 //===================AUTH=========================
-//   const session = await getServerSession(authOptions);
+const session = await auth()
 
-//   if (!session) {
-//     // Redirect to login if no session is found
-//     redirect("/login");
-//   }
+  if (!session?.user) {
+    // Redirect to login if no session is found
+    redirect("/login");
+  }
 //===================AUTH=========================
 
   const eventData = await prisma.event.findMany()
@@ -46,6 +46,19 @@ const Dashboard = async () => {
     <AdminDash 
       events={eventData}
     />
+    <form action={async () => {
+        "use server"
+        await signOut()
+      }}>
+
+      <Button
+        variant='secondary'
+        className="float-right"
+        type="submit"
+      >
+        Log Out
+      </Button>
+    </form>
     <Toaster />
     </>
   )

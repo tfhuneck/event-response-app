@@ -29,11 +29,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
        
         const  user = await prisma.user.findUnique({
           where: {
-            username: credentials.username
+            username: credentials.username as string,
           }
         })
 
-        // if(!user || )
+        if (credentials?.username === user?.username && credentials?.password === user?.password) {
+          return user;
+        }else {
+          throw new Error("Invalid credentials");
+        }
          
         if (!user) {
           // No user found, so this is their first attempt to login
@@ -41,7 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new Error("User not found.")
         }
         // return user object with their profile data
-        return user
+        // return user
       },
     }),
    

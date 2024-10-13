@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
-import { signIn } from "@/lib/auth"
+import { signIn } from "next-auth/react"
 import {
   Card,
   CardContent,
@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useRouter } from "next/navigation";
 
 const logInSchema = z.object({
   username: z.string().min(2, {
@@ -34,10 +35,24 @@ const logInSchema = z.object({
 
 
 const LoginForm = () => {
-  const form = useForm()
+  const router = useRouter();
+  const form = useForm<z.infer<typeof logInSchema>>({
+    resolver: zodResolver(logInSchema),
+  })
 
   const onSubmit = async (values: z.infer<typeof logInSchema>) => {
-    await signIn(values)
+    const res = await signIn("credentials", {
+      redirect: false, // Set to false to handle the response in your code
+      username: values.username,
+      password: values.password,
+    })
+
+    if (res?.error) {
+      console.error(res.error);
+    } else {
+      console.log("Successfully logged in!");
+      router.push(`/admin`);
+    }
   }
 
   return (
@@ -78,9 +93,6 @@ const LoginForm = () => {
                       <FormControl>
                         <Input placeholder="password" {...field} id="password" type="password" required/>
                       </FormControl>
-                      <FormDescription>
-                        This is your public display name.
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
