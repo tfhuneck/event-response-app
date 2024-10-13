@@ -41,14 +41,11 @@ const Confirm = async ({ params }: { params: { responseid: string} }) => {
         <main className="h-screen flex flex-col items-center justify-center font-serif z-10">
           <div className="h-screen flex flex-col mt-32 items-center sm:pt-20 sm:px-10 sm:w-8/12 2xl:w-6/12">
             <Card className="w-full flex flex-col justify-center items-center h-1/2 mt-32 col-span-3 border-0 backdrop-blur-md bg-opacity-80">
-              <CardHeader className="text-xl" >
-                Thank you {`${capitalizeFirstLetter(responseData.firstName)}`},
+              <CardContent className="flex flex-col text-xl font-medium">
+              Thank you {`${capitalizeFirstLetter(responseData.firstName)}`},
                 <p>
-                  We have recieved your RSVP
+                  We have recieved your RSVP and we will contact you for an alternative date.
                 </p>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center text-xl font-medium">
-                We will contact you for an alternative date.
               </CardContent>
             </Card>
           </div>

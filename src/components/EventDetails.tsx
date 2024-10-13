@@ -105,6 +105,10 @@ const EventDetails: React.FC<Props> = ({eventData, slotsData, altslotData }) => 
   const navigateResponses = (id: String) => {
     router.push(`/admin/event/${id}/responses`)
   }
+  
+  const navigateAltResponses = () => {
+    router.push(`/admin/altresponses`)
+  }
 
   const copyInvite = (id: String) => {
     const rootUrl = process.env.NEXT_PUBLIC_URL
@@ -149,6 +153,9 @@ const EventDetails: React.FC<Props> = ({eventData, slotsData, altslotData }) => 
                 <DropdownMenuContent align="end" >
                   <DropdownMenuItem onClick={() => navigateResponses(`${eventData?.id}`)} >
                       View Responses
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigateAltResponses()} >
+                      View Alt Responses
                   </DropdownMenuItem>
                   <DropdownMenuSeparator/>
                   <DropdownMenuItem onClick={() => navigateInvite(`${eventData?.id}`)} >

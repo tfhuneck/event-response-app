@@ -54,17 +54,17 @@ const Confirm = async ({ params }: { params: { responseid: string} }) => {
                 </p>
               </CardHeader>
               <CardContent className="flex flex-col items-center text-xl font-medium">
-                <p>
+                <p className="font-semibold">
                   {slotData.time.toDateString()}
                 </p>
-                <p>
+                <p className="font-semibold">
                   {slotData.name}
                 </p>
                 <br />
               </CardContent>
               <CardFooter className="text-xl">
                   Please come to the<br />
-                  Historic Main Street in Woodland – <br />
+                  Historic Main Street in Woodland <br />
                   524 Main Street, Suite 101.
               </CardFooter>
             </Card>

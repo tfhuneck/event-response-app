@@ -78,6 +78,10 @@ const EventList  = ({events, date, setDate}: Props) => {
     router.push(`/admin/event/${id}/edit`)
   }
 
+  const navigateAltResponses = () => {
+    router.push(`/admin/altresponses`)
+  }
+
   const handleDelete = async (eventId : String) => {
     const rmv = eventsData.filter((i) => i.id != eventId)
     setEventsData(rmv)
@@ -139,6 +143,10 @@ const EventList  = ({events, date, setDate}: Props) => {
                       <DropdownMenuSeparator/>
                       <DropdownMenuItem className="focus:bg-red-200">
                         <DialogTrigger>Delete</DialogTrigger>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator/>
+                      <DropdownMenuItem onClick={() => navigateAltResponses()} >
+                      View Alt Responses
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
