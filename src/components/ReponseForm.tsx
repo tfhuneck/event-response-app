@@ -159,8 +159,8 @@ const Response : React.FC<props> = ({params, eventData, slotsData, altslotData})
   return (
     <>
       <Card className="w-full mt-14 mb-20 col-span-3 border-0 backdrop-blur-md bg-opacity-80 flex flex-col items-center">
-        <CardHeader className="text-xl font-bold">
-          <div className="flex flex-col items-center mt-4 sm:p-20">
+        <CardHeader className="font-bold mb-2">
+          <div className="flex flex-col items-center mt-4 sm:px-20">
             <p  className="text-4xl font-thin">
               {eventData?.name}
             </p>
@@ -171,10 +171,10 @@ const Response : React.FC<props> = ({params, eventData, slotsData, altslotData})
           </div>
         </CardHeader>
         <CardContent className="max-w-3xl sm:px-10 ">
-          <p className="text-xl mb-2">
-            {/* Dear {capitalizeFirstLetter(params.firstname)},  */}
-          </p>
-          <div className="mb-20">
+          {/* <p className="text-xl mb-2">
+            Dear {capitalizeFirstLetter(params.firstname)}, 
+          </p> */}
+          <div className="mb-10">
             <ReactMarkdown 
               remarkPlugins={[remarkGfm]} 
               components={{
