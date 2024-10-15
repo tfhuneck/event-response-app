@@ -36,6 +36,7 @@ import axios from '@/lib/axiosInstance';
 import InviteAltSlot from './InviteAltSlot';
 import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm';
+import moment from 'moment-timezone';
 
 interface props {
   params : params 
@@ -171,7 +172,7 @@ const Response : React.FC<props> = ({params, eventData, slotsData, altslotData})
         </CardHeader>
         <CardContent className="max-w-3xl sm:px-10 ">
           <p className="text-xl mb-2">
-            Dear {capitalizeFirstLetter(params.firstname)}, 
+            {/* Dear {capitalizeFirstLetter(params.firstname)},  */}
           </p>
           <div className="mb-20">
             <ReactMarkdown 
@@ -226,7 +227,8 @@ const Response : React.FC<props> = ({params, eventData, slotsData, altslotData})
                     Attendance Details
                   </CardTitle>
                   <p className='italic'>
-                    {`${time.toDateString()}`}
+                    {moment(`${time}`).tz("America/Los_Angeles").format('LL')}
+                    {/* {`${time.toDateString()}`} */}
                   </p>
                 </CardHeader>
                 <CardContent className='flex flex-col items-center' >
@@ -234,11 +236,11 @@ const Response : React.FC<props> = ({params, eventData, slotsData, altslotData})
                     {capitalizeFirstLetter(params.firstname)} {capitalizeFirstLetter(params.lastname)}
                   </p>
                   <p className='font-semibold text-md mb-2'>
-                    Timeslot: {`${slotName}`}
+                    Time slot: {`${slotName}`}
                   </p>
                   <p>
                     You are welcome to bring members of your household who are 21 years and older. 
-                    Bringing outside guests is currently closed.
+                    No other guests are allowed at this time.
                   </p>
                 </CardContent>
                 <CardFooter className='flex flex-col items-center' >

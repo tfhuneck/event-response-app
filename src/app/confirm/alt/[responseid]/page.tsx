@@ -44,7 +44,7 @@ const Confirm = async ({ params }: { params: { responseid: string} }) => {
               <CardContent className="flex flex-col text-xl font-medium">
               Thank you {`${capitalizeFirstLetter(responseData.firstName)}`},
                 <p>
-                  We have recieved your RSVP and we will contact you for an alternative date.
+                  We will contact you for an alternative date.
                 </p>
               </CardContent>
             </Card>

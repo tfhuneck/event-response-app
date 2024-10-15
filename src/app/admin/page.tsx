@@ -31,8 +31,8 @@ const session = await auth()
 //===================AUTH=========================
 
   const eventData = await prisma.event.findMany()
-  console.log('eventdata at server component')
-  console.log(eventData)
+  // console.log('eventdata at server component')
+  // console.log(eventData)
 
   return (
     <>

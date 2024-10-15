@@ -8,6 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import prisma from '@/lib/prisma';
+import moment from 'moment-timezone';
+
 
 const Confirm = async ({ params }: { params: { responseid: string} }) => {
 
@@ -47,25 +49,28 @@ const Confirm = async ({ params }: { params: { responseid: string} }) => {
         <main className="h-screen flex flex-col items-center justify-center font-serif z-10">
           <div className="h-screen flex flex-col mt-32 items-center sm:pt-20 sm:px-10 sm:w-8/12 2xl:w-6/12">
             <Card className="w-full flex flex-col justify-center items-center h-1/2 mt-32 col-span-3 border-0 backdrop-blur-md bg-opacity-80">
-              <CardHeader className="text-xl" >
-                Thank you {`${capitalizeFirstLetter(responseData.firstName)}`},
+              <CardHeader className="text-xl flex flex-col items-center" >
+                Thank you, {`${capitalizeFirstLetter(responseData.firstName)}`}.
                 <p>
-                  We have recieved your RSVP
+                  We look forward to seeing you.
                 </p>
               </CardHeader>
-              <CardContent className="flex flex-col items-center text-xl font-medium">
+              <CardContent className="flex flex-col items-start text-xl font-medium">
                 <p className="font-semibold">
-                  {slotData.time.toDateString()}
+                  {moment(`${slotData.time}`).tz("America/Los_Angeles").format('LL')}
                 </p>
                 <p className="font-semibold">
                   {slotData.name}
                 </p>
                 <br />
               </CardContent>
-              <CardFooter className="text-xl">
-                  Please come to the<br />
-                  Historic Main Street in Woodland <br />
+              <CardFooter className="text-xl flex flex-col items-center">
+                <p>
+                  Historic Main Street in Woodland 
+                </p>
+                <p>
                   524 Main Street, Suite 101.
+                </p>
               </CardFooter>
             </Card>
           </div>

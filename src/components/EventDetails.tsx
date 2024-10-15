@@ -125,7 +125,7 @@ const EventDetails: React.FC<Props> = ({eventData, slotsData, altslotData }) => 
     to: eventData?.dateEnd
   }
 
-  console.log(eventData?.description)
+  // console.log(eventData?.description)
 
   return (
     <>
@@ -210,7 +210,7 @@ const EventDetails: React.FC<Props> = ({eventData, slotsData, altslotData }) => 
           <CardFooter>
             <SlotInput
               params={eventData ? eventData : {}}
-              eventDate={eventData ? eventData.dateStart : new Date()}
+              // eventDate={eventData ? eventData.dateStart : new Date()}
             />
             <div className="ml-2">
               <AltSlotInput 

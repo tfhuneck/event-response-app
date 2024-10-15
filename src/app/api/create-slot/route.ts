@@ -17,5 +17,6 @@ export async function POST(req: Request, res: Response) {
     }
     const entry = await prisma.timeslot.create({data: slot});
     res = new Response(JSON.stringify(entry),{ status: 200, statusText: 'success'})
+    res = new Response()
     return res
 }

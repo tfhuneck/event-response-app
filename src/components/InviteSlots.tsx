@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Ghost } from 'lucide-react';
+import moment from 'moment-timezone';
  
 interface Props extends React.InputHTMLAttributes<HTMLInputElement>  {
   slots: Slot[] | null
@@ -72,7 +73,7 @@ const InviteSlots  = React.forwardRef<HTMLInputElement, Props> (({slots, setTime
               <CardHeader className='flex flex-col justify-center items-center'>
                 <CardTitle>{i.name}</CardTitle>
                 <CardDescription>
-                 {i.time.toDateString()} {i.open ? '' : ' – Booked'}
+                {moment(`${i.time}`).tz("America/Los_Angeles").format('LL')} {i.open ? '' : ' – Booked'}
                 </CardDescription>
               </CardHeader>
             </Card>

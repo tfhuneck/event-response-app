@@ -46,7 +46,7 @@ const Event = async ({ params }: { params: { id: string } }) => {
     }
   })
 
-  console.log(eventData)
+  // console.log(eventData)
 
   return (
     <>

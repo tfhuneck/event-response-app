@@ -37,6 +37,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import moment from "moment";
 
 
 interface Inputs {
@@ -50,7 +51,6 @@ const slotSchema = z.object({
 })
 
 interface props {
-  eventDate: Date
   length?: Number
   params: {
     id?: String
@@ -59,7 +59,7 @@ interface props {
   }
 }
 
-const SlotInput : React.FC<props> = ({params, eventDate}) => {
+const SlotInput : React.FC<props> = ({params}) => {
   const router = useRouter()
   const [date, setDate] = React.useState<Date>()
   const { reset } = useForm();
@@ -75,10 +75,13 @@ const SlotInput : React.FC<props> = ({params, eventDate}) => {
   }
 
   const onSubmit = (data : z.infer<typeof slotSchema> ) => {
-    const slotData = {...data,...slotObj}
-    // console.log(slotData)
+    const time = data.time.toISOString()
+    console.log(time)
+    const name = data.name
+    const slotData = {time, name, ...slotObj}
+    console.log(slotData)
     axios.post('api/create-slot',{
-      slotData
+       slotData
     }, {
         headers: {}
     })
