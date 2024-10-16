@@ -55,7 +55,10 @@ const Confirm = async ({ params }: { params: { responseid: string} }) => {
                   We look forward to seeing you.
                 </p>
                 <p>
-                  Please stop by anytime within this time frame.
+                  Please stop by anytime 
+                </p>
+                <p>
+                  within this time frame.
                 </p>
               </CardHeader>
               <CardContent className="flex flex-col items-start text-xl font-medium">
