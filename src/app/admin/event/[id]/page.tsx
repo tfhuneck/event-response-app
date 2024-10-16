@@ -57,7 +57,7 @@ const Event = async ({ params }: { params: { id: string } }) => {
           </BreadcrumbItem>
           <BreadcrumbSeparator/>
           <BreadcrumbItem>
-            <BreadcrumbPage> {eventData ? eventData?.name : 'Event'} </BreadcrumbPage>
+            <BreadcrumbPage> {eventData ? eventData?.tag : 'Event'} </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
