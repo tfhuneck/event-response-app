@@ -48,7 +48,7 @@ const Confirm = async ({ params }: { params: { responseid: string} }) => {
       { responseData && slotData &&
         <main className="h-screen flex flex-col items-center justify-center font-serif z-10">
           <div className="h-screen flex flex-col mt-32 sm:mt-10 items-center sm:pt-20 sm:px-10 sm:w-8/12 2xl:w-6/12">
-            <Card className="w-full flex flex-col justify-center items-center h-1/2 mt-32 col-span-3 border-0 backdrop-blur-md bg-opacity-80 py-36">
+            <Card className="w-full flex flex-col justify-center items-center h-1/2 mt-32 col-span-3 border-0 backdrop-blur-md bg-opacity-80 py-48 sm:py-36">
               <CardHeader className="text-xl flex flex-col items-center" >
                 Thank you, {`${capitalizeFirstLetter(responseData.firstName)}`}.
                 <p>
