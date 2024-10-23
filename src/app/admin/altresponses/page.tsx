@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import AltResponseList from "@/components/AltResponseList";
 
-const Responses = async () => {
+const AltResponses = async () => {
 
   const altResponses = await prisma.altResponse.findMany({})
 
@@ -33,4 +33,4 @@ const Responses = async () => {
   )
 }
 
-export default Responses;
+export default AltResponses;
